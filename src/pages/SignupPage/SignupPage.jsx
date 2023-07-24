@@ -16,7 +16,7 @@ import {
 // on the client (react, browser code)
 import { useNavigate } from 'react-router-dom';
 
-export default function SignUpPage(){
+export default function SignUpPage({handleSignUpOrLogin}){
 
 		const [state, setState] = useState({
 			username: '',
@@ -51,6 +51,7 @@ export default function SignUpPage(){
 				console.log(signUp)
 				// navigate the user to the home page!
 				navigate('/');
+				handleSignUpOrLogin(); // this function comes from the APP component
 
 			} catch(err){
 				console.log(err, ' err in handleSubmit');
