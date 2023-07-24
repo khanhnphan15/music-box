@@ -22,12 +22,16 @@ async function signup(req, res) {
 async function login(req, res) {
  
   try {
+    // finding the user by there email
     const user = await User.findOne({email: req.body.email});
    
     if (!user) return res.status(401).json({err: 'bad credentials'});
+    // check the users password
     user.comparePassword(req.body.password, (err, isMatch) => {
       
       if (isMatch) {
+        // if the password is good, create our jwt
+        // and send it back to the client
         const token = createJWT(user);
         res.json({token});
       } else {
