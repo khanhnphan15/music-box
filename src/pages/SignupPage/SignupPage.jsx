@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import userService from '../../utils/userService'
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 
 import {
 	Button,
@@ -31,8 +33,21 @@ export default function SignUpPage(){
 			})
 		}	
 
-		function handleSubmit(){
-			
+		async function handleSubmit(e){
+			e.preventDefault();
+
+			try {
+				// this line of code is making the fetch request to the server
+				// and sending our state object
+				// this is calling the signup fetch function defined in our utils/userService
+				const signUp = await userService.signup(state)
+				console.log(signUp)
+
+			} catch(err){
+				console.log(err, ' err in handleSubmit');
+				setError('Check your terminal for your error and the chrome console!')
+			}
+
 		}
 	
 		return (

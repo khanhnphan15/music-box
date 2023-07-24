@@ -1,12 +1,18 @@
 import tokenService from './tokenService';
 
+
+
 const BASE_URL = '/api/users/';
+
+
 
 function signup(user) {
   return fetch(BASE_URL + 'signup', {
     method: 'POST',
     headers: new Headers({'Content-Type': 'application/json'}),  // If you are sending a file/photo over
     // what do datatype do you need to change this too?
+    // this is the contents of the form that you want to send to the server
+    // user must be an object in order JSONIFY
     body: JSON.stringify(user)
   })
   .then(res => {
@@ -19,6 +25,8 @@ function signup(user) {
   // The above could have been written as
   //.then((token) => token.token);
 }
+
+
 
 function getUser() {
   return tokenService.getUserFromToken();
@@ -43,7 +51,7 @@ function login(creds) {
 }
 
 export default {
-  signup, 
+  signup,
   getUser,
   logout,
   login
