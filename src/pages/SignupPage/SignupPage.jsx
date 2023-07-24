@@ -12,6 +12,9 @@ import {
 	Segment,
   } from "semantic-ui-react";
 
+// this hook can be used to programtically change url we are on 
+// on the client (react, browser code)
+import { useNavigate } from 'react-router-dom';
 
 export default function SignUpPage(){
 
@@ -24,6 +27,10 @@ export default function SignUpPage(){
 		})
 
 		const [error, setError] = useState('');
+		
+		// navigate is a function that just takes a path
+		// the path should match a route defined in the App.js
+		const navigate = useNavigate()
 
 		function handleChange(e){
 
@@ -42,6 +49,8 @@ export default function SignUpPage(){
 				// this is calling the signup fetch function defined in our utils/userService
 				const signUp = await userService.signup(state)
 				console.log(signUp)
+				// navigate the user to the home page!
+				navigate('/');
 
 			} catch(err){
 				console.log(err, ' err in handleSubmit');

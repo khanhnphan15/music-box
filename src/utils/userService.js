@@ -5,6 +5,11 @@ import tokenService from './tokenService';
 const BASE_URL = '/api/users/';
 
 
+// this fetch request is making an http POST request to our server
+// POST /api/users/signup
+
+// to run the controller function in our routes//users file
+// router.post("/signup",  usersCtrl.signup);
 
 function signup(user) {
   return fetch(BASE_URL + 'signup', {
@@ -15,6 +20,7 @@ function signup(user) {
     // user must be an object in order JSONIFY
     body: JSON.stringify(user)
   })
+  // the .thens occur when we get a response from the server!
   .then(res => {
     if (res.ok) return res.json();
     // Probably a duplicate email

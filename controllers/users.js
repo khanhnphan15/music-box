@@ -13,9 +13,12 @@ async function signup(req, res) {
     await user.save();
     const token = createJWT(user);
     res.json({ token });
+    // this response gets process by the client 
+    // utils/userService signup function, inside of the .thens
   } catch (err) {
     console.log(err)
     // Probably a duplicate email
+    console.log(err)
     res.status(400).json(err);
   }
 }
