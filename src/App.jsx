@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import "./App.css";
 import { useState } from 'react'
 
@@ -24,10 +24,26 @@ function App() {
   function handleSignUpOrLogin(){
     setUser(userService.getUser())
   }
+
+
+  if(!user){
+    // if the user is not logged in only render the following routes
+    return (
+      <Routes>
+        <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
+        <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin}/>} /> 
+        <Route path="/*" element={<Navigate to='/login' />} />
+      </Routes>
+    )
+
+  }
+
+  // If the user is logged in render the following routes
+
   return (
     <Routes>
       <Route path="/" element={<h1>Home Pageeeeeeeeeee</h1>} />
-      <Route path="/login" element={<LoginPage />} />
+      <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
       <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin}/>} />
     </Routes>
   );
