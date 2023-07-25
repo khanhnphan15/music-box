@@ -15,6 +15,9 @@ const userRouter = require("./routes/api/users")
 // add in when the app is ready to be deployed
 // app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
 app.use(logger("dev"));
+
+
+// This handles http requests with json in body, the parses the req.body from json into an object
 app.use(express.json());
 
 

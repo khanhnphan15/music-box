@@ -25,6 +25,9 @@ export default function SignUpPage({handleSignUpOrLogin}){
 			passwordConf: '',
 			bio: ''
 		})
+		
+		// this state will handle the file upload
+		const [selectedFile, setSelectedFile] = useState('')
 
 		const [error, setError] = useState('');
 		
@@ -40,14 +43,38 @@ export default function SignUpPage({handleSignUpOrLogin}){
 			})
 		}	
 
+		function handleFileInput(e){
+			setSelectedFile(e.target.files[0])
+		}
+
 		async function handleSubmit(e){
 			e.preventDefault();
+
+			// ANYTIME YOU'RE SENDING A FILE TO THE SERVER
+			// You must create formdata!
+			// This needs to be done because the http request
+			// will be sent in two parts, the text, and the file
+			const formData = new FormData();
+			// key on req.file would be photo, 
+			formData.append('photo', selectedFile);
+			// req.body formdata
+			formData.append('username', state.username)
+			formData.append('email', state.email)
+			formData.append('password', state.password)	
+			formData.append('bio', state.bio)
+
+			// this for loop does the same thing as the code above ^^^
+			// for (let key in state){
+			// 	formData.append(key, state[fieldName])
+			// }
+
+
 
 			try {
 				// this line of code is making the fetch request to the server
 				// and sending our state object
 				// this is calling the signup fetch function defined in our utils/userService
-				const signUp = await userService.signup(state)
+				const signUp = await userService.signup(formData)
 				console.log(signUp)
 				// navigate the user to the home page!
 				navigate('/');
@@ -111,6 +138,7 @@ export default function SignUpPage({handleSignUpOrLogin}){
 					   type="file"
 					   name="photo"
 					   placeholder="upload image"
+					   onChange={handleFileInput}
 					 />
 				   </Form.Field>
 				   <Button type="submit" className="btn">
