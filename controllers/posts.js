@@ -8,6 +8,8 @@ module.exports = {
 }
 
 function create(req, res){
+
+   console.log(req.body, req.file, ' < req.body, req.file in posts/api create')
    res.json({data: 'working'})
 }
 
