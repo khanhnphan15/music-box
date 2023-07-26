@@ -26,7 +26,8 @@ export default function FeedPage() {
 	try {
 		const responseData = await postsApi.create(data)
 		console.log(responseData, ' <- response from server in handleAddPost')
-
+		setPosts([responseData.data, ...posts]); // emptying the previous posts in to the new
+		// and then adding the new one we just created to the front (response.data)
 	} catch(err){
 		console.log(err, ' err in handleAddPost FeedPage')
 		setError('Error Creating a Post! Please try again')
