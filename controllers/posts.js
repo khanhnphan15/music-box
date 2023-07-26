@@ -1,6 +1,6 @@
 const Post = require('../models/post');
 
-const BUCKET_NAME = process.env.BUCKET
+const BUCKET_NAME = process.env.BUCKET_NAME
 
 module.exports = {
     create,
