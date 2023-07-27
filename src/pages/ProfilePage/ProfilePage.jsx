@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from 'react-router-dom'
+import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import ProfileBio from "../../components/ProfileBio/ProfileBio";
 import ProfilePostDisplay from "../../components/ProfilePostDisplay/ProfilePostDisplay";
@@ -8,13 +8,23 @@ import PageHeader from "../../components/Header/Header";
 import userService from "../../utils/userService";
 
 export default function ProfilePage() {
+  const [posts, setPosts] = useState([]);
+  const [user, setUser] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
+  // grabbing the param from this route
+  //  <Route path="/:username" element={<ProfilePage />} />
+  const { username } = useParams();
+  console.log(username);
 
- // grabbing the param from this route
- //  <Route path="/:username" element={<ProfilePage />} />
- const { username } = useParams()
- console.log(username)
- 
+  useEffect(() => {
+    async function getProfile() {
+		// make the api call, 
+		// then log the response,
+		// then update the state
+	}
+  }, []);
 
   return (
     <Grid>
