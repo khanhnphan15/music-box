@@ -5,7 +5,8 @@ import { useState } from 'react'
 
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignupPage/SignupPage";
-import FeedPage from './pages/FeedPage/Feed'
+import FeedPage from './pages/FeedPage/Feed';
+import ProfilePage from './pages/ProfilePage/ProfilePage';
 
 import userService from "./utils/userService";
 // ANY Component rendered by a ROUTE, goes in the pages folder!
@@ -45,6 +46,7 @@ function App() {
       <Route path="/" element={<FeedPage />} />
       <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
       <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin}/>} />
+      <Route path="/:username" element={<ProfilePage />} />
     </Routes>
   );
 }
