@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, uesEffect, useEffect } from "react";
 import PageHeader from "../../components/Header/Header";
 import AddPuppyForm from "../../components/AddPuppyForm/AddPuppyForm";
 import PostGallery from "../../components/PostGallery/PostGallery";
@@ -34,6 +34,24 @@ export default function FeedPage() {
 	}
   }
 
+  // C(R)UD
+  async function getPosts(){
+	try {
+		const responseFromTheServer = await postsApi.getAll(); // this is the fetch function from post utils
+		console.log(responseFromTheServer)
+		 setPosts(responseFromTheServer.posts)
+	} catch(err){
+		console.log(err, ' err in getPosts')
+		setError('Error Fetching Posts, Check terminal')
+	}
+  }
+
+
+
+  useEffect(() => {
+	getPosts()
+  }, []);// empty array says run the use effect once when the page loads up!
+
 
   return (
     <Grid centered>
@@ -49,7 +67,7 @@ export default function FeedPage() {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column style={{ maxWidth: 450 }}>
-          <PostGallery />
+          <PostGallery posts={posts}/>
         </Grid.Column>
       </Grid.Row>
     </Grid>
