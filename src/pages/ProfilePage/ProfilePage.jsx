@@ -23,8 +23,29 @@ export default function ProfilePage() {
 		// make the api call, 
 		// then log the response,
 		// then update the state
+
+		try {
+			setLoading(true)
+			const response = await userService.getProfile(username)
+			console.log(response)
+			setPosts(response.posts)
+			setUser(response.user)
+			setLoading(false)
+		} catch(err){
+			setError('Error loading profile')
+			console.log(err, ' err in profile')
+		}
 	}
+
+	getProfile()
   }, []);
+
+  if(loading){
+	<>
+		<PageHeader />
+		<h1>Loading....</h1>
+	</>
+  }
 
   return (
     <Grid>
@@ -35,7 +56,7 @@ export default function ProfilePage() {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column>
-          <ProfileBio />
+          <ProfileBio user={user}/>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>

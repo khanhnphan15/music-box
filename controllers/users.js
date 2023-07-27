@@ -1,4 +1,5 @@
 const User = require('../models/user');
+const Post = require('../models/post')
 const jwt = require('jsonwebtoken');
 const SECRET = process.env.SECRET;
 
@@ -26,6 +27,7 @@ module.exports = {
 
 
 async function profile(req, res){
+ 
   try {
     // First find the user using the params from the request
     // findOne finds first match, its useful to have unique usernames!
