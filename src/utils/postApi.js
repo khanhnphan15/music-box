@@ -29,6 +29,8 @@ export function create(data){
 }
 
 // call this function in a useEffect in the feedpage
+// this funciton is making a request to this route
+// on express server router.get('/', postsCtrl.index) /api/posts
 export function getAll(){
 	return fetch(BASE_URL, {
 		method: 'GET',
