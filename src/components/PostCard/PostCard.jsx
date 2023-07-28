@@ -1,21 +1,23 @@
 import { Card, Icon, Image } from "semantic-ui-react";
 
-function PostCard({ post }) {
+function PostCard({ post, isProfile }) {
   return (
     <Card key={post._id}>
-      <Card.Content textAlign="left">
-        <Image
-          floated="left"
-          size="large"
-          avatar
-          src={
-            post.user.photoUrl
-              ? post.user.photoUrl
-              : "https://react.semantic-ui.com/images/wireframe/square-image.png"
-          }
-        />
-        <Card.Header floated="right">{post.user.username}</Card.Header>
-      </Card.Content>
+      {isProfile ? null : (
+        <Card.Content textAlign="left">
+          <Image
+            floated="left"
+            size="large"
+            avatar
+            src={
+              post.user.photoUrl
+                ? post.user.photoUrl
+                : "https://react.semantic-ui.com/images/wireframe/square-image.png"
+            }
+          />
+          <Card.Header floated="right">{post.user.username}</Card.Header>
+        </Card.Content>
+      )}
 
       <Image src={`${post.photoUrl}`} wrapped ui={false} />
       <Card.Content>

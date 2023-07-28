@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import ProfileBio from "../../components/ProfileBio/ProfileBio";
-import ProfilePostDisplay from "../../components/ProfilePostDisplay/ProfilePostDisplay";
+import PostGallery from '../../components/PostGallery/PostGallery'
 import PageHeader from "../../components/Header/Header";
 
 import userService from "../../utils/userService";
@@ -20,31 +20,33 @@ export default function ProfilePage() {
 
   useEffect(() => {
     async function getProfile() {
-		// make the api call, 
-		// then log the response,
-		// then update the state
+      // make the api call,
+      // then log the response,
+      // then update the state
 
-		try {
-			setLoading(true)
-			const response = await userService.getProfile(username)
-			console.log(response)
-			setPosts(response.posts)
-			setUser(response.user)
-			setLoading(false)
-		} catch(err){
-			setError('Error loading profile')
-			console.log(err, ' err in profile')
-		}
-	}
+      try {
+        setLoading(true);
+        const response = await userService.getProfile(username);
+        console.log(response);
+        setPosts(response.posts);
+        setUser(response.user);
+        setLoading(false)
+      } catch (err) {
+        setError("Error loading profile");
+        console.log(err, " err in profile");
+      }
+    }
 
-	getProfile()
+    getProfile();
   }, []);
 
-  if(loading){
-	<>
-		<PageHeader />
-		<h1>Loading....</h1>
-	</>
+  if (loading) {
+    return (
+      <>
+        <PageHeader />
+        <h1>Loading....</h1>
+      </>
+    );
   }
 
   return (
@@ -56,12 +58,12 @@ export default function ProfilePage() {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column>
-          <ProfileBio user={user}/>
+          <ProfileBio user={user} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row centered>
         <Grid.Column style={{ maxWidth: 750 }}>
-          <ProfilePostDisplay />
+          <PostGallery posts={posts} itemsPerRow={3} isProfile={true}/> 
         </Grid.Column>
       </Grid.Row>
     </Grid>

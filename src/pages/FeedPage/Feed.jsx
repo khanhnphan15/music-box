@@ -67,7 +67,7 @@ export default function FeedPage() {
       </Grid.Row>
       <Grid.Row>
         <Grid.Column style={{ maxWidth: 450 }}>
-          <PostGallery posts={posts}/>
+          <PostGallery posts={posts} itemsPerRow={1} isProfile={false}/>
         </Grid.Column>
       </Grid.Row>
     </Grid>
