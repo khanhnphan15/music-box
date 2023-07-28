@@ -1,6 +1,6 @@
 import { Card, Icon, Image } from "semantic-ui-react";
 
-function PostCard({ post, isProfile }) {
+function PostCard({ post, isProfile, addLike, removeLike }) {
   return (
     <Card key={post._id}>
       {isProfile ? null : (
