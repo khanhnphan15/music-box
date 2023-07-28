@@ -19,7 +19,7 @@ router.post("/login", usersCtrl.login);
 // this is params for the api request coming from the react side
 // /api/users/frenchacking
 // /api/users/bobwier
-// api/users/jimhaff
+// /api/users/jimhaff
 router.get('/:username', usersCtrl.profile);
 /*---------- Protected Routes ----------*/
 
