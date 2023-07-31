@@ -9,7 +9,7 @@ import userService from "../../utils/userService";
 
 import * as likesApi from "../../utils/likeApi";
 
-export default function ProfilePage({user}) {
+export default function ProfilePage({user, handleLogout}) {
   const [posts, setPosts] = useState([]);
   const [userState, setUserState] = useState({});
   const [loading, setLoading] = useState(true);
@@ -72,12 +72,12 @@ export default function ProfilePage({user}) {
   useEffect(() => {
    
     getProfile();
-  }, []);
+  }, [username]);
 
   if (loading) {
     return (
       <>
-        <PageHeader />
+        <PageHeader handleLogout={handleLogout} user={user}/>
         <h1>Loading....</h1>
       </>
     );
@@ -87,7 +87,7 @@ export default function ProfilePage({user}) {
     <Grid>
       <Grid.Row>
         <Grid.Column>
-          <PageHeader />
+          <PageHeader handleLogout={handleLogout} user={user}/>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

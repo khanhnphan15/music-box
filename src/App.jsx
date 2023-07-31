@@ -27,6 +27,14 @@ function App() {
   }
 
 
+  function handleLogout(){
+    userService.logout();// removing the jwt token from local storage.
+    // set the user to null so we don't have the previously logged in user
+    // in our state
+    setUser(null)
+  }
+
+
   if(!user){
     // if the user is not logged in only render the following routes
     return (
@@ -43,10 +51,10 @@ function App() {
 
   return (
     <Routes>
-      <Route path="/" element={<FeedPage user={user}/>} />
+      <Route path="/" element={<FeedPage user={user} handleLogout={handleLogout}/>} />
       <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
       <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin}/>} />
-      <Route path="/:username" element={<ProfilePage user={user}/>} />
+      <Route path="/:username" element={<ProfilePage user={user} handleLogout={handleLogout}/> } />
     </Routes>
   );
 }

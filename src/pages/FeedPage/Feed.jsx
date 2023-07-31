@@ -10,7 +10,7 @@ import * as postsApi from "../../utils/postApi";
 import * as likesApi from "../../utils/likeApi";
 
 
-export default function FeedPage({user}) {
+export default function FeedPage({user, handleLogout}) {
   // The reasons we are setting posts state, is because then we can pass that data to the postgallery
   // where it will be rendered!
   const [posts, setPosts] = useState([]); // array of objects containing the likes as well)
@@ -80,7 +80,7 @@ export default function FeedPage({user}) {
     <Grid centered>
       <Grid.Row>
         <Grid.Column>
-          <PageHeader />
+          <PageHeader handleLogout={handleLogout} user={user}/>
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>

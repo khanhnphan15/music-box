@@ -33,7 +33,7 @@ export default function LoginPage({handleSignUpOrLogin}) {
     e.preventDefault();
 
     try {
-      await userService.login(state)
+      await userService.login(state)// making the http request to the server
       navigate('/')
       handleSignUpOrLogin(); // this comes from app.js as a prop, which it gets the token from localstorage and stores the decoded 
       // token in the app.js state
