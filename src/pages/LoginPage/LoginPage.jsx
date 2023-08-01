@@ -1,24 +1,24 @@
 import React from "react";
 import "./LoginPage.css";
 
-import {useState} from 'react'
+import { useState } from 'react'
 
-import { Link, useNavigate} from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import {
-	Button,
-	Form,
-	Grid,
-	Header,
-	Image,
-	Message,
-	Segment,
-  } from "semantic-ui-react";
+  Button,
+  Form,
+  Grid,
+  Header,
+  Image,
+  Message,
+  Segment,
+} from "semantic-ui-react";
 
 import userService from "../../utils/userService";
 
-export default function LoginPage({handleSignUpOrLogin}) {
-   
+export default function LoginPage({ handleSignUpOrLogin }) {
+
   const [state, setState] = useState({
     email: '',
     password: ''
@@ -29,23 +29,21 @@ export default function LoginPage({handleSignUpOrLogin}) {
   // this function takes a path defined in App.js for our routes
   const navigate = useNavigate();
 
-  async function handleSubmit(e){
+  async function handleSubmit(e) {
     e.preventDefault();
 
     try {
       await userService.login(state)// making the http request to the server
       navigate('/')
-      handleSignUpOrLogin(); // this comes from app.js as a prop, which it gets the token from localstorage and stores the decoded 
-      // token in the app.js state
-
-    } catch(err){
+      handleSignUpOrLogin();
+    } catch (err) {
       console.log(err)
       setError('check terminal and console')
     }
 
   }
 
-  function handleChange(e){
+  function handleChange(e) {
     setState({
       ...state,
       [e.target.name]: e.target.value
@@ -53,7 +51,7 @@ export default function LoginPage({handleSignUpOrLogin}) {
   }
 
   return (
-      <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle" className="login-container">
+    <Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle" className="login-container">
       <Grid.Column style={{ maxWidth: 450 }}>
         <Header as="h2" color="black" textAlign="center">
           <Image src="https://assets.dryicons.com/uploads/vector/preview/9349/large_2x_colorful_music.jpg" /> LogIn
