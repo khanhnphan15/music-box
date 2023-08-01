@@ -1,0 +1,25 @@
+/* Header.css */
+.header-container {
+    background: linear-gradient(to right, #667eea, #764ba2);
+    padding: 1rem;
+    text-align: center;
+}
+
+.header-title {
+    font-size: 2rem;
+    color: black;
+    font-weight: bold;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    /* Optional text shadow for better visibility */
+}
+  /* Style the Logout link */
+  .header-container a {
+    color: black;
+    text-decoration: none;
+    margin-left: 20px; /* Add some margin to the left to separate it from the header title */
+  }
+.black-text {
+    color: black;
+}
+
+  

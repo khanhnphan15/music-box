@@ -1,0 +1,10 @@
+/* Hide the default file input button */
+#file-upload {
+    display: none;
+    display: inline-block;
+    /* padding: 10px; */
+    background: linear-gradient(to right, #ff7a18, #af002d);
+    color: #fff;
+    border-radius: 5px;
+  }
+  

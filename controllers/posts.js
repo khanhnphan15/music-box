@@ -25,7 +25,7 @@ function create(req, res) {
 
   // this is the location of where our file will stored
   // on aws s3
-  const filePath = `pupstagram65/posts/${uuidv4()}-${req.file.originalname}`;
+  const filePath = `music-box/posts/${uuidv4()}-${req.file.originalname}`;
   // create the object we want to send to aws
   const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
 
@@ -63,6 +63,7 @@ async function index(req, res) {
     // so you'll have access to the users information
     // when you fetch teh posts
     const posts = await Post.find({}).populate("user").exec();
+    // console.log(posts.map(i => ({id: i.id, userId: i.user?.id})))
     res.status(200).json({ posts });
   } catch (err) {}
 }

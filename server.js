@@ -1,18 +1,38 @@
 require("dotenv").config();
+require("./config/database");
 const express = require("express");
 const path = require("path");
 const logger = require("morgan");
 const favicon = require("serve-favicon");
-
-require("./config/database");
-
-// Require controllers here
+const multer = require("multer");
 
 const app = express();
 
+// Multer configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "projects"); // Specify the directory where you want to save the uploaded files
+  },
+  filename: (req, file, cb) => {
+    // Rename the file to a unique name (you can customize the naming logic as per your requirements)
+    const uniqueFileName = `${Date.now()}-${file.originalname}`;
+    cb(null, uniqueFileName);
+  },
+});
+const upload = multer({ dest: "projects/" });
+app.post("/songs", upload.single("file"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: "No audio file received." });
+  }
+  // You can access the uploaded file info using req.file
+  // You can save the file info in your database or perform any other operation with it
+
+  return res.status(200).json({ message: "Audio file uploaded successfully." });
+});
+
 const userRouter = require("./routes/api/users")
 const postRouter = require('./routes/api/posts')
-const likesRouter = require('./routes/api/likes')
+// const likesRouter = require('./routes/api/likes')
 // add in when the app is ready to be deployed
 // app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
 app.use(logger("dev"));
@@ -29,10 +49,18 @@ app.use(require("./config/auth"));
 // api routes must be before the "catch all" route
 app.use("/api/users", userRouter);
 app.use('/api/posts', postRouter);
-app.use('/api', likesRouter);
 // "catch all" route
 app.get('/*', function(req, res) {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+// File upload route
+app.post("/songs", upload.single("file"), (req, res) => {
+  // Handle the uploaded file here
+  console.log(req.file); // This will log the details of the uploaded file
+
+  // You can save the file to a specific folder or perform other operations here
+
+  res.status(200).send("File uploaded successfully");
 });
 
 

@@ -88,10 +88,10 @@ export default function SignUpPage({handleSignUpOrLogin}){
 		}
 	
 		return (
-			<Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle">
+			<Grid textAlign="center" style={{ height: "100vh" }} verticalAlign="middle" className="login-container">
 			 <Grid.Column style={{ maxWidth: 450 }}>
-				<Header as="h2" color="purple" textAlign="center">
-				 <Image src="https://i.imgur.com/TM4eA5g.jpg" /> Sign Up
+				<Header as="h2" color="black" textAlign="center">
+				 <Image src="https://assets.dryicons.com/uploads/vector/preview/9349/large_2x_colorful_music.jpg" /> Sign Up to your Account
 			   </Header>
 			   <Form autoComplete="off" onSubmit={handleSubmit}>
 				 <Segment stacked>

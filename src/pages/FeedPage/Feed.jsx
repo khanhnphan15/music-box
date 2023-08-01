@@ -1,7 +1,8 @@
 import { useState, uesEffect, useEffect } from "react";
 import PageHeader from "../../components/Header/Header";
-import AddPuppyForm from "../../components/AddPuppyForm/AddPuppyForm";
+import UploadSongForm from "../../components/UploadSongForm/UploadSongForm";
 import PostGallery from "../../components/PostGallery/PostGallery";
+import "./Feed.css"; // Import the CSS file
 
 import { Grid } from "semantic-ui-react";
 
@@ -30,7 +31,7 @@ export default function FeedPage({user, handleLogout}) {
       console.log(err, ' error')
     }
   }
-  
+
   async function removeLike(likeId){
     try {
       const response = await likesApi.removeLike(likeId);
@@ -77,20 +78,18 @@ export default function FeedPage({user, handleLogout}) {
   }, []); // empty array says run the use effect once when the page loads up!
 
   return (
-    <Grid centered>
+    <Grid centered className="feed-page">
+      <div className="background-image"></div>
       <Grid.Row>
-        <Grid.Column>
-          <PageHeader handleLogout={handleLogout} user={user}/>
+        <PageHeader handleLogout={handleLogout} user={user}/>
+      </Grid.Row>
+      <Grid.Row>
+        <Grid.Column style={{ maxWidth: 450 }}>
+          <UploadSongForm handleAddPost={handleAddPost} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
         <Grid.Column style={{ maxWidth: 450 }}>
-          <AddPuppyForm handleAddPost={handleAddPost} />
-        </Grid.Column>
-      </Grid.Row>
-      <Grid.Row>
-        <Grid.Column style={{ maxWidth: 450 }}>
-          <PostGallery posts={posts} itemsPerRow={1} isProfile={false} addLike={addLike} removeLike={removeLike} user={user} />
         </Grid.Column>
       </Grid.Row>
     </Grid>

@@ -43,7 +43,6 @@ export function getAll(){
 	}).then(responseFromTheServer => {
 		if(responseFromTheServer.ok) return responseFromTheServer.json() // so if everything went well in the response return 
 		//the parsed json to where we called the function
-
 		throw new Error('Something went wrong in getAll posts, check the terminal!'); // this will go to the catch block when we call the function in the AddPostPuppyForm
 		// handleSubmit
 	})

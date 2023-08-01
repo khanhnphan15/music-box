@@ -38,7 +38,7 @@ async function profile(req, res){
     // using the post model to find all the users posts (the user from req.params)
     // finding all posts by a user, and populating the user property!
     const posts = await Post.find({user: user._id}).populate("user").exec();
-    console.log(posts, ' this posts')
+    // console.log(posts, ' this posts')
     res.status(200).json({posts: posts, user: user})
   } catch(err){
     console.log(err)
@@ -55,7 +55,7 @@ async function signup(req, res) {
 
   // this is the location of where our file will stored 
   // on aws s3
-  const filePath = `pupstagram65/${uuidv4()}-${req.file.originalname}`
+  const filePath = `music-box/${uuidv4()}-${req.file.originalname}`
   // create the object we want to send to aws 
   const params = {Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer}
 
