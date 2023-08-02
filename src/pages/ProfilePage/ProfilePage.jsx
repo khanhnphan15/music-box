@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
-import ProfileBio from "../../components/ProfileBio/ProfileBio";
+import ProfileBio from "../../components/ProfileBioPage/ProfileBioPage";
 import PageHeader from "../../components/Header/Header";
 import userService from "../../utils/userService";
 

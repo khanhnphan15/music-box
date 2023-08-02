@@ -2,7 +2,7 @@
 import {  Image, Grid, Segment } from 'semantic-ui-react';
 
 
-function ProfileBio({user}) { 
+export default function ProfileBioPage({user}) { 
   return (
   <Grid textAlign='center' columns={2}>
     <Grid.Row>
@@ -24,6 +24,3 @@ function ProfileBio({user}) {
   );
 }
 
-
-
-export default ProfileBio;
