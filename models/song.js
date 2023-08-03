@@ -21,5 +21,10 @@ const songSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
+    url: {
+        type: String,
+        required: true,
+        trim: true,
+    }
 });
-module.exports = mongoose.model('Playlist', postSchema);
+module.exports = mongoose.model('Song', songSchema);

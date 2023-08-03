@@ -4,6 +4,7 @@ import './Header.css'; // Import the CSS file
 
 export default function PageHeader({user, handleLogout}) {
     return (
+
         <Segment clearing className="main-header">
             <Header as="h1" floated="left">
                 Music Box .

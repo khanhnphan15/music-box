@@ -1,142 +1,85 @@
-// const mongodb = require('mongodb');
-// const conn = require('../config/db');
-//
-// // @desc   add new playlist
-// // @route  POST /api/v1/playlist/create
-// // @access Private
-// export const addPlaylist = async (req, res) => {
-//     try {
-//         // Establishing connection to the database
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//
-//         // Inserting the playlist to the database
-//         const playList = await collection.insertOne({
-//             playlistName: req.body.playlistName,
-//             createdBy: req.userId,
-//             songs: [],
-//         });
-//         // If the playlist is added successfully return a success message
-//         if (playList) {
-//             return res
-//                 .status(200)
-//                 .json({ message: "Playlist added successfully", status: "success" });
-//
-//         } else throw new Error("Error adding playlist");
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(500).json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc   Delete a playlist
-// // @route  DELETE /api/v1/playlist/delete/:id
-// // @access Private
-// export const deletePlaylist = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//
-//         const playlist = await collection.deleteOne({
-//             _id: new mongodb.ObjectId(req.params.id),
-//         });
-//         if (playlist) {
-//             return res
-//                 .status(200)
-//                 .json({ message: "Playlist deleted successfully", status: "success" });
-//         } else throw new Error("Error deleting playlist");
-//     } catch (error) {
-//         console.log(error.message);
-//         return res.json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc   Add song to playlist
-// // @route  POST /api/v1/playlist/add/:id
-// // @access Private
-// export const addSongToPlaylist = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//
-//         const playlist = await collection.findOneAndUpdate(
-//             { _id: new mongodb.ObjectId(req.params.id) },
-//             { $push: { songs: req.body[0] } }
-//         );
-//         if (playlist) {
-//             return res
-//                 .status(200)
-//                 .json({ message: "Song added to playlist", status: "success" });
-//         } else throw new Error("Error adding song to playlist");
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(500).json({ error: error.message, status: "error" });
-//     }
-//     res.send("Add Song to Playlist Page");
-// };
-//
-// // @desc   Remove song from playlist
-// // @route  DELETE /api/v1/playlist/remove/:id
-// // @access Private
-// export const removeSongFromPlaylist = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//
-//         const playlist = await collection.findOneAndUpdate(
-//             { _id: new mongodb.ObjectId(req.params.id) },
-//             { $pull: { songs: { title: req.query.song } } }
-//         );
-//         res.status(200).json({ message: "Song removed from playlist" });
-//     } catch (error) {
-//         console.log(error);
-//         return res.json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc   Get all playlists
-// // @route  GET /api/v1/playlist/
-// // @access Private
-// export const getPlaylists = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//         const playlists = await collection
-//             .find({ createdBy: req.userId })
-//             .toArray();
-//         if (playlists.length === 0) {
-//             res.status(404);
-//             throw new Error("No playlists found");
-//         }
-//         res.status(200).json({ playlists });
-//     } catch (error) {
-//         console.log(error.message);
-//         return res.status(500).json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc   Get a playlist
-// // @route  GET /api/v1/playlist/:id
-// // @access Private
-// export const getPlaylist = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("playlists");
-//
-//         const playlist = await collection.findOne({
-//             _id: new mongodb.ObjectId(req.params.id),
-//         });
-//         if (playlist) {
-//             return res.status(200).json({ playlist });
-//         } else throw new Error("Error getting playlist");
-//     } catch (error) {
-//         console.log(error);
-//         return res.status(500).json({ error: error.message, status: "error" });
-//     }
-// };
+const Playlist = require("../models/playlist");
+
+// helps generate random numbers for
+// our file names, so every file name is unique
+const { v4: uuidv4 } = require("uuid");
+// import the s3 constructor
+const S3 = require("aws-sdk/clients/s3");
+// initialize the S3 constructor so we have an object to talk to aws
+const s3 = new S3();
+
+// since everyone has a unique bucket name,
+// its a good use case for a .env variable
+// because we don't share that outside our computer
+const BUCKET_NAME = process.env.BUCKET_NAME;
+
+module.exports = {
+    create,
+    index,
+    getPlaylistDetail
+};
+async function getPlaylistDetail(req, res) {
+    try {
+        const playlistId = req.params.id; // Assuming you're using Express and the ID is in the URL
+        const playlist = await Playlist.findById(playlistId).populate('songs').exec();
+
+        if (!playlist) {
+            return res.status(404).json({ error: "Playlist not found" });
+        }
+
+        // Perform any additional actions or transformations as needed
+
+        res.status(200).json({ playlist });
+    } catch (err) {
+        console.error("Error fetching playlist detail:", err);
+        res.status(500).json({ error: "Error fetching playlist detail" });
+    }
+}
+function create(req, res) {
+    console.log(req.body, req.file, " < req.body, req.file in posts/api create");
+    // check if there is a file, if there isn't send back an error
+    if (!req.file) return res.status(400).json({ error: "Please Submit a Photo" });
+
+    // this is the location of where our file will stored
+    // on aws s3
+    const filePath = `music-box/posts/${uuidv4()}-${req.file.originalname}`;
+    // create the object we want to send to aws
+    const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
+
+    s3.upload(params, async function (err, data) {
+        if (err) {
+            console.log("===========================================");
+            console.log(
+                err,
+                " err from aws, either your bucket name is wrong or your keys arent correct"
+            );
+            console.log("===========================================");
+            res.status(400).json({ error: "Error from aws, check your terminal!" });
+        }
+
+        try {
+            // Use our Model to create a document in the posts collection in Mongodb
+            const post = await Post.create({
+                caption: req.body.caption,
+                user: req.user, // req.user is defined in config/auth if we the client sends over the jwt token
+                photoUrl: data.Location, // data.Location comes from the callback in the s3 upload
+            });
+
+            await post.populate("user"); // populating on a mongoose document! this gives us the user object
+            // this response will show up in the feedPage in   const responseData = await postsApi.create(post);
+            res.status(201).json({ data: post }); // <- this is what responseData should be
+        } catch (err) {
+            res.status(400).json({ error: err });
+        }
+    });
+}
+
+async function index(req, res) {
+    try {
+        const playlists = await Playlist.find({}).exec();
+        res.status(200).json({ playlists }); // Corrected field name to 'songs'
+    } catch (err) {
+        console.error("Error fetching songs:", err);
+        res.status(500).json({ error: "Error fetching songs" });
+    }
+}

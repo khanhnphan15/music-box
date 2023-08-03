@@ -1,9 +1,9 @@
-import React, {useState} from "react";
-import {Button, Form, Grid, Segment, Container, Header} from "semantic-ui-react";
+import React, { useState, useEffect } from "react";
+import { Button, Form, Grid, Segment, Container } from "semantic-ui-react";
 import {useNavigate} from "react-router-dom";
 import './UploadSongPage.css'; // Import the CSS file
-import axios from "axios";
-import * as postsApi from "../../utils/postApi";
+import Header from "../../components/Header/Header";
+import * as songApi from "../../utils/songApi";
 
 export default function UploadSongPage() {
     const navigate = useNavigate();
@@ -29,7 +29,7 @@ export default function UploadSongPage() {
 
     async function handleAddPost(data) {
         try {
-            const responseData = await postsApi.create(data);
+            const responseData = await songApi.create(data);
             console.log(responseData, " <- response from server in handleAddPost");
             // Add your code to handle the response data from the server if needed
         } catch (err) {
@@ -69,10 +69,8 @@ export default function UploadSongPage() {
 
     return (
         <div className="upload-song">
+            <Header />
             <Container text>
-                <Header as="h1" textAlign="center" style={{marginTop: "10px"}}>
-                    Upload Song
-                </Header>
                 <Form autoComplete="off" onSubmit={handleSubmit}>
                     <Form.Field>
                         <label>Title</label>

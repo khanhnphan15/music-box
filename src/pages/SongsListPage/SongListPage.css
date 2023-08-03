@@ -1,4 +1,5 @@
-.upload-song {
+.song-wrapper {
+    padding: 40px;
     position: fixed;
     top: 0;
     left: 0;

@@ -10,33 +10,6 @@ export default function FeedPage({user, handleLogout}) {
 
   const [posts, setPosts] = useState([])
   const [error, setError] = useState("");
-
-  // EVERY TIME WE UPDATE STATE here, We will first make http request to the server
-  // to try and perform some CRUD operation.
-  async function addLike(postId){
-    try {
-      const response = await likesApi.create(postId);
-  
-      getPosts(); // this funciton updates state
-
-    } catch(err){
-      setError('error creating like')
-      console.log(err, ' error')
-    }
-  }
-
-  async function removeLike(likeId){
-    try {
-      const response = await likesApi.removeLike(likeId);
-
-      getPosts(); 
-
-    } catch(err){
-      setError('error creating like')
-      console.log(err, ' error')
-    }
-  }
-  // (C)RUD
   async function handleAddPost(data) {
     try {
       const responseData = await postsApi.create(data);
@@ -61,7 +34,7 @@ export default function FeedPage({user, handleLogout}) {
   }
 
   useEffect(() => {
-    getPosts();
+    getPosts().then(r => {});
   }, []); 
 
   return (

@@ -1,163 +1,68 @@
-// import conn from "../config/db.js";
-// import fs from "fs";
-// import mongodb from "mongodb";
-//
-// // @desc    Add a new song
-// // @route   POST /api/v1/song/upload
-// // @access  Private
-// export const addSong = async (req, res) => {
-//     try {
-//         // getting the data from the request body
-//         const { title, artist, album, description } = req.body;
-//
-//         // if any of the fields are empty throw an error
-//         if (!title || !artist || !album || !description) {
-//             res.status(400);
-//             throw new Error("Please add all fields");
-//         }
-//
-//         // connction to the database
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("songs");
-//         const bucket = new mongodb.GridFSBucket(db, {
-//             bucketName: "uploads",
-//         });
-//
-//         // uploading the file to the database
-//         const readStream = fs
-//             .createReadStream(req.file.path)
-//             .pipe(bucket.openUploadStream(req.file.filename));
-//
-//         // if there is an error throw an error
-//         readStream.on("error", (error) => {
-//             throw error;
-//         });
-//
-//         // if the file is uploaded successfully delete the file from the uploads folder
-//         // and insert the song data to the database
-//         readStream.on("finish", async () => {
-//             console.log("finished");
-//             const song = await collection.insertOne({
-//                 title,
-//                 artist,
-//                 album,
-//                 description,
-//                 uploadedBy: req.userId,
-//                 song: req.file.filename,
-//                 file: readStream.id,
-//             });
-//             if (song) {
-//                 res
-//                     .status(201)
-//                     .json({ message: "Song added successfully", status: "success" });
-//             } else {
-//                 res.status(400);
-//                 throw new Error("Invalid song data");
-//             }
-//         });
-//     } catch (error) {
-//         console.log(error);
-//
-//         return res.json({ error: error.message });
-//     }
-// };
-//
-// //@desc   Delete a song
-// //@route  DELETE /api/v1/song/delete/:id
-// //@access Private
-// export const deleteSong = async (req, res) => {
-//     try {
-//         console.log("hitting the server");
-//         console.log(req.query.file);
-//         const { id } = req.params;
-//         if (!id) {
-//             res.status(400);
-//             throw new Error("No id provided");
-//         }
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("songs");
-//         const bucket = new mongodb.GridFSBucket(db, {
-//             bucketName: "uploads",
-//         });
-//
-//         const song = await collection.findOne({ _id: new mongodb.ObjectId(id) });
-//         if (!song) {
-//             res.status(404);
-//             throw new Error("Song not found");
-//         }
-//         if (song.uploadedBy !== req.userId) {
-//             res.status(401);
-//             throw new Error("Unauthorized");
-//         }
-//         const deleteSong = await collection.deleteOne({
-//             _id: new mongodb.ObjectId(id),
-//         });
-//         if (deleteSong) {
-//             await bucket.delete(new mongodb.ObjectId(req.query.file));
-//             res
-//                 .status(200)
-//                 .json({ message: "Song deleted successfully", status: "success" });
-//         } else {
-//             res.status(400);
-//             throw new Error("Error deleting song");
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         return res.json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc    Get all songs
-// // @route   GET /api/v1/songs
-// // @access  Public
-// export const getSongs = async (req, res) => {
-//     try {
-//
-//         const db = conn.db("music_streaming");
-//         const collection = db.collection("songs");
-//         const songs = await collection.find({}).toArray();
-//         if (songs.length === 0) {
-//             res.status(404);
-//             throw new Error("No songs found");
-//         }
-//         res.status(200).json({ songs });
-//     } catch (error) {
-//         console.log(error);
-//         return res.json({ error: error.message, status: "error" });
-//     }
-// };
-//
-// // @desc: Stream a song
-// // @route : GET /api/v1/song/download/:filename
-// // @access  Public
-// export const streamSong = async (req, res) => {
-//     try {
-//         // if no file name is provided throw an error
-//         if (!req.params.filename) {
-//             res.status(400);
-//             throw new Error("No file name provided");
-//         }
-//         // connection to the database and getting the file from the database
-//
-//         const db = conn.db("music_streaming");
-//         const bucket = new mongodb.GridFSBucket(db, {
-//             bucketName: "uploads",
-//         });
-//
-//         // setting the content type of the file
-//
-//
-//         // streaming the file to the client
-//         const downloadStream = bucket.openDownloadStreamByName(req.params.filename).pipe(res).on("error", (error) => { throw error; });
-//
-//         downloadStream.on("end", () => {
-//             res.end();
-//         });
-//
-//         // if there is an error throw an error
-//     } catch (error) {
-//         console.log(error.message);
-//         return res.json({ error: error.message, status: "error" });
-//     }
-// };
+const Song = require("../models/song");
+
+// helps generate random numbers for
+// our file names, so every file name is unique
+const { v4: uuidv4 } = require("uuid");
+// import the s3 constructor
+const S3 = require("aws-sdk/clients/s3");
+// initialize the S3 constructor so we have an object to talk to aws
+const s3 = new S3();
+
+// since everyone has a unique bucket name,
+// its a good use case for a .env variable
+// because we don't share that outside our computer
+const BUCKET_NAME = process.env.BUCKET_NAME;
+
+module.exports = {
+    create,
+    index,
+};
+
+function create(req, res) {
+    console.log(req.body, req.file, " < req.body, req.file in posts/api create");
+    // check if there is a file, if there isn't send back an error
+    if (!req.file) return res.status(400).json({ error: "Please Submit a Photo" });
+
+    // this is the location of where our file will stored
+    // on aws s3
+    const filePath = `music-box/posts/${uuidv4()}-${req.file.originalname}`;
+    // create the object we want to send to aws
+    const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
+
+    s3.upload(params, async function (err, data) {
+        if (err) {
+            console.log("===========================================");
+            console.log(
+                err,
+                " err from aws, either your bucket name is wrong or your keys arent correct"
+            );
+            console.log("===========================================");
+            res.status(400).json({ error: "Error from aws, check your terminal!" });
+        }
+
+        try {
+            // Use our Model to create a document in the posts collection in Mongodb
+            const post = await Post.create({
+                caption: req.body.caption,
+                user: req.user, // req.user is defined in config/auth if we the client sends over the jwt token
+                photoUrl: data.Location, // data.Location comes from the callback in the s3 upload
+            });
+
+            await post.populate("user"); // populating on a mongoose document! this gives us the user object
+            // this response will show up in the feedPage in   const responseData = await postsApi.create(post);
+            res.status(201).json({ data: post }); // <- this is what responseData should be
+        } catch (err) {
+            res.status(400).json({ error: err });
+        }
+    });
+}
+
+async function index(req, res) {
+    try {
+        const songs = await Song.find({}).exec();
+        res.status(200).json({ songs }); // Corrected field name to 'songs'
+    } catch (err) {
+        console.error("Error fetching songs:", err);
+        res.status(500).json({ error: "Error fetching songs" });
+    }
+}

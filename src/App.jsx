@@ -4,13 +4,15 @@ import { useState } from 'react'
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignupPage/SignupPage";
 import FeedPage from './pages/FeedPage/Feed';
-import PlaylistPage from "./pages/PlayListPage/PlayLIstPage";
+import PlayListPage from "./pages/PlayListPage/PlayListPage";
 import ProfilePage from './pages/ProfilePage/ProfilePage';
-import SongsPage from "./pages/SongsPage/SongsPage";
+import SongsListPage from "./pages/SongsListPage/SongsListPage";
 import UploadSongPage from './pages/UploadSongPage/UploadSongPage'; // Import the UploadSongPage component
 import userService from "./utils/userService";
+import PlayListDetailPage from './pages/PlayListDetailPage/PlayListDetailPage'; // Update the path accordingly
 
 function App() {
+
     const [user, setUser] = useState(userService.getUser());
     function handleSignUpOrLogin() {
         setUser(userService.getUser())
@@ -39,8 +41,9 @@ function App() {
             <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
             <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
             <Route path="/upload" element={<UploadSongPage />} /> {/* Add the UploadSongPage route */}
-            <Route path="/playlists" element={<PlaylistPage />} /> {/* Add the PlayList route */}
-            <Route path="/songs" element={<SongsPage />} /> {/* Add the SongsPage route */}
+            <Route path="/playlists" element={<PlayListPage />} /> {/* Add the PlayList route */}
+            <Route path="/playlists/detail/:id" element={<PlayListDetailPage />} /> {/* Add the PlayList route */}
+            <Route path="/songs" element={<SongsListPage />} /> {/* Add the SongsPage route */}
             <Route path="/:username" element={<ProfilePage user={user} handleLogout={handleLogout} />} />
             {/*<Route path="/playlist" element={<PlayListPage handleLogout={handleLogout}/>}/>*/}
         </Routes>

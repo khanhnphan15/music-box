@@ -32,6 +32,8 @@ app.post("/songs", upload.single("file"), (req, res) => {
 
 const userRouter = require("./routes/api/users")
 const postRouter = require('./routes/api/posts')
+const songRouter = require("./routes/api/songs")
+const playlistRouter = require("./routes/api/playlists");
 // const likesRouter = require('./routes/api/likes')
 // add in when the app is ready to be deployed
 // app.use(favicon(path.join(__dirname, 'build', 'favicon.ico')));
@@ -49,9 +51,12 @@ app.use(require("./config/auth"));
 // api routes must be before the "catch all" route
 app.use("/api/users", userRouter);
 app.use('/api/posts', postRouter);
+app.use("/api/songs", songRouter);
+app.use("/api/playlists", playlistRouter);
 // "catch all" route
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// "catch all" route
+app.get("/*", function (req, res) {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 // File upload route
 app.post("/songs", upload.single("file"), (req, res) => {

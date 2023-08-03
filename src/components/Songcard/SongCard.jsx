@@ -1,25 +1,21 @@
-// // This component is used to display the song card in the home page and the playlist page. The song card is used to display the song name, artist name, and the options to play, add to queue, add to playlist, and delete the song. The song card is also used to play the song when the user clicks on the song card.
-//
-// //Importing libries
-// import React from "react";
-// import { useContext, useState, useRef } from "react";
-// import axios from "axios";
+import React from "react";
+import { useContext, useState, useRef } from "react";
+
 // import { decodeToken } from "react-jwt";
 // import {  useNavigate } from "react-router-dom";
 //
-// //Importing context
-// import { SongContext } from "../Context/SongContext";
-// import { FetchContext } from "../Context/FetchContext";
-// import { QueueContext } from "../Context/QueueContex";
-//
-// //Importing icons
-// import { SlOptionsVertical } from "react-icons/sl";
-// import { MdDeleteOutline,MdOutlinePlaylistAdd,MdQueuePlayNext} from 'react-icons/md'
-// import musicbg from "../assets/musicbg.jpg";
+
+
 //
 //
-// const SongCard = ({ title, artistName, songSrc, userId, songId, file }) => {
-//
+const SongCard = ({ title, artistName, songSrc, userId, songId, file }) => {
+    return (
+      <div>
+          ghghgh
+      </div>
+    )
+
+}
 //     // Using context
 //     const { song, audio, __URL__ } = useContext(SongContext);
 //     const { setFetchSong} = useContext(FetchContext);
@@ -128,4 +124,4 @@
 //     );
 // };
 //
-// export default SongCard;
+export default SongCard;
