@@ -58,16 +58,6 @@ app.use("/api/playlists", playlistRouter);
 app.get("/*", function (req, res) {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
-// File upload route
-app.post("/songs", upload.single("file"), (req, res) => {
-  // Handle the uploaded file here
-  console.log(req.file); // This will log the details of the uploaded file
-
-  // You can save the file to a specific folder or perform other operations here
-
-  res.status(200).send("File uploaded successfully");
-});
-
 
 const port = process.env.PORT || 3001;
 

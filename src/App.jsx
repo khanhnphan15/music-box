@@ -9,7 +9,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SongsListPage from "./pages/SongsListPage/SongsListPage";
 import UploadSongPage from './pages/UploadSongPage/UploadSongPage'; // Import the UploadSongPage component
 import userService from "./utils/userService";
-import PlayListDetailPage from './pages/PlayListDetailPage/PlayListDetailPage'; // Update the path accordingly
+import PlaylistDetailPage from './pages/PlayListDetailPage/PlaylistDetailPage'; // Update the path accordingly
 
 function App() {
 
@@ -42,7 +42,7 @@ function App() {
             <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
             <Route path="/upload" element={<UploadSongPage />} /> {/* Add the UploadSongPage route */}
             <Route path="/playlists" element={<PlayListPage />} /> {/* Add the PlayList route */}
-            <Route path="/playlists/detail/:id" element={<PlayListDetailPage />} /> {/* Add the PlayList route */}
+            <Route path="/playlists/detail/:id" element={<PlaylistDetailPage />} /> {/* Add the PlayList route */}
             <Route path="/songs" element={<SongsListPage />} /> {/* Add the SongsPage route */}
             <Route path="/:username" element={<ProfilePage user={user} handleLogout={handleLogout} />} />
             {/*<Route path="/playlist" element={<PlayListPage handleLogout={handleLogout}/>}/>*/}

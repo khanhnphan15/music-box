@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Card, Container } from "semantic-ui-react";
 import * as songApi from "../../utils/songApi";
+import Header from "../../components/Header/Header";
 import './SongListPage.css';
 export default function SongListPage() {
     const [songs, setSongs] = useState([]);
@@ -19,7 +20,9 @@ export default function SongListPage() {
     }
 
     return (
+
         <Container className= "song-wrapper">
+
             <h1>Song List</h1>
             <Card.Group>
                 {songs.map((song) => (

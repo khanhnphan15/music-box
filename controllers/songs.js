@@ -2,7 +2,7 @@ const Song = require("../models/song");
 
 // helps generate random numbers for
 // our file names, so every file name is unique
-const { v4: uuidv4 } = require("uuid");
+const {v4: uuidv4} = require("uuid");
 // import the s3 constructor
 const S3 = require("aws-sdk/clients/s3");
 // initialize the S3 constructor so we have an object to talk to aws
@@ -19,15 +19,29 @@ module.exports = {
 };
 
 function create(req, res) {
+    const caption = req.body.caption;
+    const file = req.file; // The uploaded file, if present
+    const title = req.body.title;
+    const artist = req.body.artist;
+    const album = req.body.album;
+    const description = req.body.description;
+
+    console.log('Caption:', caption);
+    console.log('File:', file);
+    console.log('Title:', title);
+    console.log('Artist:', artist);
+    console.log('Album:', album);
+    console.log('Description:', description);
+
     console.log(req.body, req.file, " < req.body, req.file in posts/api create");
     // check if there is a file, if there isn't send back an error
-    if (!req.file) return res.status(400).json({ error: "Please Submit a Photo" });
+    if (!req.file) return res.status(400).json({error: "Please provide an mp3"});
 
     // this is the location of where our file will stored
     // on aws s3
-    const filePath = `music-box/posts/${uuidv4()}-${req.file.originalname}`;
+    const filePath = `songs/${uuidv4()}-${req.file.originalname}`;
     // create the object we want to send to aws
-    const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
+    const params = {Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer};
 
     s3.upload(params, async function (err, data) {
         if (err) {
@@ -37,32 +51,44 @@ function create(req, res) {
                 " err from aws, either your bucket name is wrong or your keys arent correct"
             );
             console.log("===========================================");
-            res.status(400).json({ error: "Error from aws, check your terminal!" });
+            res.status(400).json({error: "Error from aws, check your terminal!"});
         }
 
         try {
             // Use our Model to create a document in the posts collection in Mongodb
-            const post = await Post.create({
+            const song = await Song.create({
                 caption: req.body.caption,
-                user: req.user, // req.user is defined in config/auth if we the client sends over the jwt token
-                photoUrl: data.Location, // data.Location comes from the callback in the s3 upload
+                title: req.body.title,
+                artistName: req.body.artist,
+                album: req.body.album,
+                description: req.body.description,
+                url: data.Location
             });
-
-            await post.populate("user"); // populating on a mongoose document! this gives us the user object
             // this response will show up in the feedPage in   const responseData = await postsApi.create(post);
-            res.status(201).json({ data: post }); // <- this is what responseData should be
+            res.status(201).json({data: song }); // <- this is what responseData should be
         } catch (err) {
-            res.status(400).json({ error: err });
+            res.status(400).json({error: err});
         }
     });
 }
 
 async function index(req, res) {
     try {
-        const songs = await Song.find({}).exec();
-        res.status(200).json({ songs }); // Corrected field name to 'songs'
+        const songsQuery = Song.find({});
+        if (Object.keys(req.query).length > 0) {
+            let searchConditions = [];
+            for (let k of Object.keys(req.query)) {
+                searchConditions.push({ [k]: { $regex: req.query[k], $options: 'i' } });
+            }
+            console.log(searchConditions);
+            songsQuery.or(searchConditions);
+        }
+        console.log(songsQuery.toString());
+        let songs = await songsQuery.exec();
+
+        res.status(200).json({songs}); // Corrected field name to 'songs'
     } catch (err) {
         console.error("Error fetching songs:", err);
-        res.status(500).json({ error: "Error fetching songs" });
+        res.status(500).json({error: "Error fetching songs"});
     }
 }

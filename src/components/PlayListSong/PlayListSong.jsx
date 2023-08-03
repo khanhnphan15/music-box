@@ -7,7 +7,7 @@ export default function PlayListSong() {
         <Container text>
             <Segment>
                 <Header>Logout Successful</Header>
-                <p>You have been successfully logged out.</p>
+                <p>You </p>
             </Segment>
         </Container>
     );

@@ -1,12 +1,12 @@
 const express = require('express');
-const router = express.Router();
-const songsCtrl = require('../../controllers/songs');
 // require these for file uploads!
 const multer = require('multer');
 const upload = multer()
+const songsCtrl = require('../../controllers/songs');
 // /*---------- Public Routes ----------*/
 // /api/posts
-router.post('/', upload.single('audio'), songsCtrl.create);
+const router = express.Router();
+router.post('/', upload.single('file'), songsCtrl.create);
 router.get('/', songsCtrl.index);
 
 module.exports = router;

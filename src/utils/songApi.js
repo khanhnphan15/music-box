@@ -28,9 +28,14 @@ export async function create(data) {
   }
   
 
-  export async function getAll() {
+  export async function getAll(opts = {}) {
+	let url = BASE_URL;
+	if ('filters' in opts) {
+		let formattedFilters = opts.filters.map(i => `${i.fieldName}=${i.value}`);
+		url = `${url}?${formattedFilters.join('&')}`;
+	}
 	try {
-	  const responseFromTheServer = await fetch(BASE_URL, {
+	  const responseFromTheServer = await fetch(url, {
 		method: 'GET',
 		headers: {
 		  Authorization: "Bearer " + tokenService.getToken()
@@ -58,4 +63,3 @@ export async function create(data) {
 	  throw error;
 	}
   }
-  
