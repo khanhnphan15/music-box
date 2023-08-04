@@ -38,7 +38,7 @@ export default function PlayListPage() {
                                             <div className="name-and-avatar">
                                                 <img className="ui avatar image" src={playlist.imageUrl}/>
                                                 <div className="content">
-                                                    Lena
+                                                    {playlist.artistName}
                                                 </div>
                                             </div>
                                         </div>

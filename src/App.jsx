@@ -3,7 +3,7 @@ import "./App.css";
 import { useState } from 'react'
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignupPage/SignupPage";
-import FeedPage from './pages/FeedPage/Feed';
+import HomePage from './pages/HomePage/HomePage';
 import PlayListPage from "./pages/PlayListPage/PlayListPage";
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SongsListPage from "./pages/SongsListPage/SongsListPage";
@@ -37,7 +37,7 @@ function App() {
 
     return (
         <Routes>
-            <Route path="/" element={<FeedPage user={user} handleLogout={handleLogout} />} />
+            <Route path="/" element={<HomePage user={user} handleLogout={handleLogout} />} />
             <Route path="/login" element={<LoginPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
             <Route path="/signup" element={<SignUpPage handleSignUpOrLogin={handleSignUpOrLogin} />} />
             <Route path="/upload" element={<UploadSongPage />} /> {/* Add the UploadSongPage route */}

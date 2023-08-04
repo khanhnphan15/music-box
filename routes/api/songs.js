@@ -8,15 +8,9 @@ const songsCtrl = require('../../controllers/songs');
 const router = express.Router();
 router.post('/', upload.single('file'), songsCtrl.create);
 router.get('/', songsCtrl.index);
-
+router.delete('/:id', songsCtrl.deleteSong); //delete a playlist
 module.exports = router;
 
 
 
 
-// router.get('/',getPlaylists); //get all playlists
-// router.get('/:id',getPlaylist) //get a playlist
-// router.post('/create', addPlaylist); //add new playlist
-// router.delete('/delete/:id', deletePlaylist); //delete a playlist
-// router.post('/add/:id', addSongToPlaylist); //add song to playlist
-// router.delete('/remove/:id', removeSongFromPlaylist); //remove song from playlist

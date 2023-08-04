@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { Container, Image, Input, List } from 'semantic-ui-react';
-import { MdSearch } from 'react-icons/md';
-import { getPlaylistDetail } from '../../utils/playlistApi';
+import React, {useEffect, useState} from 'react';
+import {useParams} from 'react-router-dom';
+import {Container, Button, Icon, Image, Input, List} from 'semantic-ui-react';
+import {MdSearch} from 'react-icons/md';
+import {getPlaylistDetail} from '../../utils/playlistApi';
 import * as songsApi from '../../utils/songApi';
-import './PlayListDetailPage.css';
 
 export default function PlayListDetailPage() {
-    const { id } = useParams();
+    const {id} = useParams();
     const [playlist, setPlaylist] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSongs, setFilteredSongs] = useState([]);
     const [currentSong, setCurrentSong] = useState(null);
     const [timeoutId, setTimeoutId] = useState(null);
+    const [myPlayList, setMyPlaylist] = useState([]);
 
     const fetchPlaylistDetail = async () => {
         try {
@@ -25,19 +25,18 @@ export default function PlayListDetailPage() {
 
     const debounce = (func, delay) => {
         return function (...args) {
-            clearTimeout(timeoutId); // Clear the existing timeout
+            clearTimeout(timeoutId);
             const newTimeoutId = setTimeout(() => {
                 func.apply(null, args);
             }, delay);
-            setTimeoutId(newTimeoutId); // Update the state with the new timeoutId
+            setTimeoutId(newTimeoutId);
         };
     };
 
     useEffect(() => {
-        fetchPlaylistDetail().then(r => {});
+        fetchPlaylistDetail();
     }, []);
 
-    // Define the debounced function outside the useEffect
     const debouncedSearch = debounce(async (searchTerm) => {
         if (searchTerm) {
             const searchOpts = {
@@ -55,13 +54,11 @@ export default function PlayListDetailPage() {
             const songData = await songsApi.getAll(searchOpts);
             setFilteredSongs(songData.songs);
         } else {
-            // Handle the case where searchTerm is empty
             setFilteredSongs([]);
         }
     }, 300);
 
     useEffect(() => {
-        // Call the debounced function whenever searchTerm changes
         debouncedSearch(searchTerm);
     }, [searchTerm]);
 
@@ -73,48 +70,68 @@ export default function PlayListDetailPage() {
         }
     };
 
+    const addToPlayList = (song) => {
+        if (myPlayList.some(existingSong => existingSong._id === song._id)) {
+            console.log(`"${song.title}" is already added to My Page.`);
+            return;
+        }
+        setMyPlaylist([...myPlayList, song]);
+        console.log(`Added "${song.title}" to My Page.`);
+    };
+
     return (
-        <Container>
-            {playlist && (
-                <div style={{ display: 'flex', alignItems: 'center'}}>
-                    <Image style={{ width: '150px' }} src={playlist.imageUrl} alt="Playlist Cover" />
-                    <h2>{playlist.name}</h2>
+        <div className="detail-background">
+            <Container>
+                {playlist && (
+                    <div className="playlist-detail-wrapper">
+                        <Image className="playlist-image" src={playlist.imageUrl} alt="Playlist Cover"/>
+                        <div>
+                            <h2>{playlist.name}</h2>
+                        </div>
+                    </div>
+                )}
+                <div>
+                    <h1>Let's find your songs for your playlist</h1>
+                    <div className="ui category search">
+                        <div className="ui icon input">
+                            <input
+                                className="prompt"
+                                type="text"
+                                placeholder="Search for songs..."
+                                value={searchTerm}
+                                onInput={e => setSearchTerm(e.target.value)}
+                            />
+                            <i className="search icon"></i>
+                        </div>
+                        {/* Optional: Add your search results component here */}
+                    </div>
+                    <List divided verticalAlign='middle'>
+                        {filteredSongs.map(song => (
+                            <List.Item key={song._id}>
+                                <List.Content floated='left'>
+                                    <Button icon onClick={() => playSong(song)}>
+                                        <Icon name={currentSong === song ? 'pause' : 'play'}/>
+                                    </Button>
+                                </List.Content>
+                                <Image floated='left' avatar src={song.imageUrl}/>
+                                <List.Content floated='left' style={{marginLeft: '1rem'}}>
+                                    {song.title}
+                                </List.Content>
+                                <List.Content floated='right'>
+                                    <Button onClick={() => addToPlayList(song)}>
+                                        <Icon name='add'/>
+                                    </Button>
+                                </List.Content>
+                                <List.Content>
+                                    {currentSong === song && (
+                                        <audio controls src={song.url} style={{marginLeft: '1rem'}}/>
+                                    )}
+                                </List.Content>
+                            </List.Item>
+                        ))}
+                    </List>
                 </div>
-            )}
-
-            <div>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
-                    <MdSearch size={20} />
-                    <span style={{ marginLeft: '0.5rem', fontSize: '1rem', fontWeight: 'bold' }}>
-            Let's find something for your playlist
-          </span>
-                    <Input
-                        placeholder="Search for songs"
-                        value={searchTerm}
-                        onInput={e => setSearchTerm(e.target.value)}
-                        style={{ marginLeft: '0.5rem' }}
-                    />
-                </div>
-
-                <List divided verticalAlign='middle'>
-                    {filteredSongs.map(song => (
-                        <List.Item key={song._id}>
-                            <List.Content floated='right'>
-                                <button onClick={() => playSong(song)}>
-                                    {currentSong === song ? 'Pause' : 'Play'}
-                                </button>
-                            </List.Content>
-                            <Image avatar src={song.imageUrl} />
-                            <List.Content>
-                                {song.title}
-                                {currentSong === song && (
-                                    <audio controls src={song.url} style={{ marginLeft: '1rem' }} />
-                                )}
-                            </List.Content>
-                        </List.Item>
-                    ))}
-                </List>
-            </div>
-        </Container>
+            </Container>
+        </div>
     );
 }

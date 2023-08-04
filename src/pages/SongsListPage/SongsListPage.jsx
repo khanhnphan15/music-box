@@ -1,15 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { Card, Container } from "semantic-ui-react";
+import React, {useEffect, useState} from "react";
+import { Card, Container, Button, Icon } from "semantic-ui-react";
 import * as songApi from "../../utils/songApi";
 import Header from "../../components/Header/Header";
 import './SongListPage.css';
+
 export default function SongListPage() {
     const [songs, setSongs] = useState([]);
+    const [error, setError] = useState("");
+    const [deleteCount, setDeleteCount] = useState(0);
 
     useEffect(() => {
-        fetchSongs().then(r => {});
-    }, []);
-
+        fetchSongs().then(r => {
+        });
+    }, [deleteCount]);
     async function fetchSongs() {
         try {
             const songsData = await songApi.getAll();
@@ -18,76 +21,57 @@ export default function SongListPage() {
             console.error("Error fetching songs:", error);
         }
     }
+    async function removeSong(songId) {
+        try {
+            // Make an API call to remove the song by its ID
+           const response = await songApi.removeSong(songId);
+           setDeleteCount(deleteCount + 1);
+            // Update state by fetching songs again
+        } catch (error) {
+            setError('Error removing song:')
+            console.error("Error removing song:", error);
+        }
+    }
 
     return (
+        <div>
+            <Header /> {/* Include your Header component */}
+            <Container className="song-wrapper">
+                <h1>Song List</h1>
+                {/*<Button icon>*/}
+                {/*    <a href="/upload">*/}
+                {/*        <Icon name='upload' />*/}
+                {/*    </a>*/}
+                {/*</Button>*/}
+                <Card.Group className="centered-card-group">
+                    {songs.map((song) => (
+                        <Card key={song._id} className="song-card">
+                            <Card.Content className="song-list">
+                                <Card.Header>{song.title.slice(0, 24)}{song.title.length>24 ? '...' :  ''}</Card.Header>
+                                <Card.Meta>{song.artistName}</Card.Meta>
+                                <Card.Description>{song.description}</Card.Description>
+                                <div className="buttons">
+                                    <Button icon onClick={() => removeSong(song._id)} className="delete-button" size= "mini" >
+                                        <Icon name='delete' />
+                                    </Button>
+                                </div>
+                                {/* Audio controls */}
+                                <div className= "audio-bar">
+                                    {song.url && (
+                                        <audio controls>
+                                            <source src={song.url} type="audio/mpeg" />
+                                            Your browser does not support the audio element.
+                                        </audio>
+                                    )}
+                                </div>
 
-        <Container className= "song-wrapper">
-
-            <h1>Song List</h1>
-            <Card.Group>
-                {songs.map((song) => (
-                    <Card key={song._id}>
-                        <Card.Content>
-                            <Card.Header>{song.title}</Card.Header>
-                            <Card.Meta>{song.artistName}</Card.Meta>
-                            <Card.Description>{song.description}</Card.Description>
-                        </Card.Content>
-                        {song.url && (
-                            <audio controls>
-                                <source src={song.url} type="audio/mpeg" />
-                                Your browser does not support the audio element.
-                            </audio>
-                        )}
-                    </Card>
-                ))}
-            </Card.Group>
-        </Container>
+                            </Card.Content>
+                        </Card>
+                    ))}
+                </Card.Group>
+            </Container>
+        </div>
     );
 }
 
 
-
-// let a;
-// function AudioPlay() {
-//     const [buttonName, setButtonName] = useState("Play");
-//     const [audio, setAudio] = useState();
-//
-//     useEffect(() => {
-//         if (a) {
-//             a.pause();
-//             a = null;
-//             setButtonName("Play");
-//         }
-//         if (audio) {
-//             a = new Audio(audio);
-//             a.onended = () => {
-//                 setButtonName("Play");
-//             };
-//         }
-//     }, [audio]);
-//
-//     const handleClick = () => {
-//         if (buttonName === "Play") {
-//             a.play();
-//             setButtonName("Pause");
-//         } else {
-//             a.pause();
-//             setButtonName("Play");
-//         }
-//     };
-//
-//     const addFile = (e) => {
-//         if (e.target.files[0]) {
-//             setAudio(URL.createObjectURL(e.target.files[0]));
-//         }
-//     };
-//
-//     return (
-//         <div>
-//             <button onClick={handleClick}>{buttonName}</button>
-//             <input type="file" onChange={addFile} />
-//         </div>
-//     );
-// }
-//
-// export default AudioPlay;

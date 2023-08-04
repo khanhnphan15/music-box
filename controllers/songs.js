@@ -16,6 +16,7 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 module.exports = {
     create,
     index,
+    deleteSong,
 };
 
 function create(req, res) {
@@ -92,3 +93,18 @@ async function index(req, res) {
         res.status(500).json({error: "Error fetching songs"});
     }
 }
+async function deleteSong(req, res) {
+    try {
+        const song = await Song.findById(req.params.id); // Find the song by ID
+
+        if (!song) {
+            return res.status(404).json({ error: 'Song not found' });
+        }
+
+        await song.remove(); // Remove the song
+        res.json({ data: 'Song removed' });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+}
+

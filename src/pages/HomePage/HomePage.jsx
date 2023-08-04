@@ -1,12 +1,12 @@
 import { useState, uesEffect, useEffect } from "react";
 import PageHeader from "../../components/Header/Header";
 import UploadSongForm from "../../components/UploadSongForm/UploadSongForm";
-import "./Feed.css"; 
+import "./HomePage.css";
 import { Grid } from "semantic-ui-react";
 import * as postsApi from "../../utils/postApi";
 
 
-export default function FeedPage({user, handleLogout}) {
+export default function HomePage({user, handleLogout}) {
 
   const [posts, setPosts] = useState([])
   const [error, setError] = useState("");
@@ -16,7 +16,7 @@ export default function FeedPage({user, handleLogout}) {
       console.log(responseData, " <- response from server in handleAddPost");
       setPosts([responseData.data, ...posts]); 
     } catch (err) {
-      console.log(err, " err in handleAddPost FeedPage");
+      console.log(err, " err in handleAddPost HomePage");
       setError("Error Creating a Post! Please try again");
     }
   }

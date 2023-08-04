@@ -33,7 +33,7 @@ export default function UploadSongPage() {
             console.log(responseData, " <- response from server in handleAddPost");
             // Add your code to handle the response data from the server if needed
         } catch (err) {
-            console.log(err, " err in handleAddPost FeedPage");
+            console.log(err, " err in handleAddPost HomePage");
             // Handle any error that occurred while creating a post
         }
     }
