@@ -6,7 +6,8 @@ import {getPlaylistDetail} from '../../utils/playlistApi';
 import * as songsApi from '../../utils/songApi';
 import * as playlistApi from '../../utils/playlistApi';
 import './PlaylistDetailPage.css';
-import PlayButton from "../../components/PlayButton/PlayButton"; // Import the CSS file
+import PlayButton from "../../components/PlayButton/PlayButton";
+import Header from "../../components/Header/Header"; // Import the CSS file
 export default function PlaylistDetailPage() {
     const navigate = useNavigate();
     const {id} = useParams();
@@ -111,6 +112,7 @@ export default function PlaylistDetailPage() {
 
     return (
         <div className="detail-background">
+            <Header/>
             <Container>
                 {playlist && (
                     <div className="playlist-detail-wrapper">

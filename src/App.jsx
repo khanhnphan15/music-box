@@ -4,7 +4,6 @@ import { useState } from 'react'
 import LoginPage from "./pages/LoginPage/LoginPage";
 import SignUpPage from "./pages/SignupPage/SignupPage";
 import PlayListPage from "./pages/PlayListPage/PlayListPage";
-import ProfilePage from './pages/ProfilePage/ProfilePage';
 import SongsListPage from "./pages/SongsListPage/SongsListPage";
 import UploadSongPage from './pages/UploadSongPage/UploadSongPage'; // Import the UploadSongPage component
 import userService from "./utils/userService";
@@ -41,11 +40,11 @@ function App() {
             <div>
                 <Routes>
                     <Route path="/" element={<PlayListPage user={user} handleLogout={handleLogout}  />} />
-                    <Route path="/upload" element={<UploadSongPage />} /> {/* Add the UploadSongPage route */}
-                    <Route path="/playlists" element={<PlayListPage />} /> {/* Add the PlayList route */}
-                    <Route path="/playlists/create" element={<CreatePlaylist />} /> {/* Add the Create Playlist route */}
-                    <Route path="/playlists/detail/:id" element={<PlaylistDetailPage />} /> {/* Add the PlayList route */}
-                    <Route path="/songs" element={<SongsListPage />} /> {/* Add the SongsPage route */}
+                    <Route path="/upload" element={<UploadSongPage user={user} handleLogout={handleLogout}/>} /> {/* Add the UploadSongPage route */}
+                    <Route path="/playlists" element={<PlayListPage user={user} handleLogout={handleLogout}/>} /> {/* Add the PlayList route */}
+                    <Route path="/playlists/create" element={<CreatePlaylist user={user} handleLogout={handleLogout}/>} /> {/* Add the Create Playlist route */}
+                    <Route path="/playlists/detail/:id" element={<PlaylistDetailPage user={user} handleLogout={handleLogout}/>} /> {/* Add the PlayList route */}
+                    <Route path="/songs" element={<SongsListPage user={user} handleLogout={handleLogout}/>} /> {/* Add the SongsPage route */}
                     {/*<Route path="/:username" element={<PlayListPage user={user} handleLogout={handleLogout} />} />*/}
                 </Routes>
             </div>

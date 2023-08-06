@@ -69,7 +69,7 @@ export default function UploadSongPage() {
 
     return (
         <div className="upload-song">
-            <Header />
+            <Header/>
             <Container text>
                 <Form autoComplete="off" onSubmit={handleSubmit}>
                     <Form.Field>
