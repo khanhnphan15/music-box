@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {useParams, useNavigate} from 'react-router-dom';
 import {Container, Button, Icon, Image, Input, List} from 'semantic-ui-react';
 import {MdSearch} from 'react-icons/md';
 import {getPlaylistDetail} from '../../utils/playlistApi';
@@ -8,6 +8,7 @@ import * as playlistApi from '../../utils/playlistApi';
 import './PlaylistDetailPage.css';
 import PlayButton from "../../components/PlayButton/PlayButton"; // Import the CSS file
 export default function PlaylistDetailPage() {
+    const navigate = useNavigate();
     const {id} = useParams();
     const [playlist, setPlaylist] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
@@ -52,6 +53,15 @@ export default function PlaylistDetailPage() {
             console.error('Error fetching playlist detail:', error);
         }
     };
+
+    const handleDelete = async () => {
+        try {
+            await playlistApi._delete(playlist);
+            navigate('/playlists');
+        } catch (error) {
+            console.error('Error adding song to playlist:', error);
+        }
+    }
 
     const debounce = (func, delay) => {
         return function (...args) {
@@ -107,11 +117,12 @@ export default function PlaylistDetailPage() {
                         <Image className="playlist-image" src={playlist.imageUrl} alt="Playlist Cover"/>
                         <div className="playlist-details">
                             <h2>{playlist.name}</h2>
+                            <Icon name="trash" onClick={handleDelete} />
                         </div>
                     </div>
                 )}
                 {playlist && (
-                    <div>
+                    <List divided verticalAlign='middle'>
                         {playlist.songs.map(song => <List.Item key={song._id}>
                             <List.Content>
                                 <div style={{ display: 'flex', alignItems: 'center' }}>
@@ -135,7 +146,7 @@ export default function PlaylistDetailPage() {
                                 {/* Add your additional content here */}
                             </List.Content>
                         </List.Item>)}
-                    </div>
+                    </List>
                 )}
                 <div>
                     <h1>Let's find your songs for your playlist</h1>

@@ -46,7 +46,7 @@ Upload Song Form
 Planned future enhancements:
 * Re-style the app 
 * Need to setup functionality to delete playlist 
-* Need to setup functionality to add an image when create a new song
+* Need to setup functionality to add an image when create a new song, upload all the image to s3 AWS
 
 
 

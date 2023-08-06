@@ -27,6 +27,13 @@
 
 .playlist-details {
     margin-left: 15px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.playlist-details h2 {
+    margin: 0;
 }
 
 .song-list {
@@ -52,4 +59,24 @@ body {
 .list-container .list-item {
     display: flex !important;
     justify-content: space-between !important;
+}
+
+/* MyDropdown.css */
+.my-custom-dropdown.ui.selection.dropdown {
+    border: none;
+    background: none;
+    box-shadow: none;
+    padding: 0;
+    line-height: 1;
+    color: #000; /* Adjust the color as needed */
+    font-size: 1.5em; /* Adjust the font size as needed */
+    cursor: pointer;
+}
+
+.my-custom-dropdown.ui.selection.dropdown > i.icon {
+    display: inline-block;
+}
+
+.my-custom-dropdown.ui.selection.dropdown > i.icon:hover {
+    color: #333; /* Adjust the hover color as needed */
 }

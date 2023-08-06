@@ -9,6 +9,7 @@ router.get('/', playlistsCtrl.index);
 router.put('/:id', playlistsCtrl.update);
 // New route for fetching playlist details by ID
 router.get('/:id', playlistsCtrl.getPlaylistDetail);
-router.delete('/:playlistId/songs/:songId', playlistsCtrl._delete);
+router.delete('/:id', playlistsCtrl._delete);
+router.delete('/:playlistId/songs/:songId', playlistsCtrl._deleteSongFromPlaylist);
 
 module.exports = router;

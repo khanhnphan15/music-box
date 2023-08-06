@@ -91,6 +91,19 @@ export async function update(playlist) {
     }
 }
 
+export function _delete(playlist, token) {
+    return fetch(`${BASE_URL}${playlist._id}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: "Bearer " + tokenService.getToken() // < this is how we get the token from localstorage and and it to our api request
+            // so the server knows who the request is coming from when the client is trying to make a POST
+        },
+    }).then(responseFromTheServer => {
+        if (responseFromTheServer.ok) return responseFromTheServer.json();
+        throw new Error('Something went wrong in delete Song');
+    });
+}
+
 export async function deleteSong(playlistId, songId) {
     try {
         const responseFromTheServer = await fetch(`${BASE_URL}/${playlistId}/songs/${songId}`, {

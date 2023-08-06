@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 const { v4: uuidv4 } = require("uuid");
 // import the s3 constructor
 const S3 = require("aws-sdk/clients/s3");
+const Song = require("../models/song");
 // initialize the S3 constructor so we have an object to talk to aws
 const s3 = new S3();
 
@@ -20,6 +21,7 @@ module.exports = {
     getPlaylistDetail,
     update,
     _delete,
+    _deleteSongFromPlaylist,
 };
 async function getPlaylistDetail(req, res) {
     try {
@@ -123,7 +125,7 @@ async function index(req, res) {
     }
 }
 
-async function _delete(req, res) {
+async function _deleteSongFromPlaylist(req, res) {
     const playlistId = req.params.playlistId;
     const songId = req.params.songId;
 
@@ -145,5 +147,20 @@ async function _delete(req, res) {
     } catch (error) {
         console.error('Error deleting song:', error);
         res.status(500).json({ error: 'An error occurred while deleting the song' });
+    }
+}
+
+async function _delete(req, res) {
+    try {
+        const playlist = await Playlist.findById(req.params.id); // Find the song by ID
+
+        if (!playlist) {
+            return res.status(404).json({ error: 'Playlist not found' });
+        }
+
+        await playlist.remove(); // Remove the song
+        res.json({ data: 'Playlist removed' });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
     }
 }
