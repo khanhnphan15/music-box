@@ -26,15 +26,6 @@ function create(req, res) {
     const artist = req.body.artist;
     const album = req.body.album;
     const description = req.body.description;
-
-    console.log('Caption:', caption);
-    console.log('File:', file);
-    console.log('Title:', title);
-    console.log('Artist:', artist);
-    console.log('Album:', album);
-    console.log('Description:', description);
-
-    console.log(req.body, req.file, " < req.body, req.file in posts/api create");
     // check if there is a file, if there isn't send back an error
     if (!req.file) return res.status(400).json({error: "Please provide an mp3"});
 
@@ -81,10 +72,8 @@ async function index(req, res) {
             for (let k of Object.keys(req.query)) {
                 searchConditions.push({ [k]: { $regex: req.query[k], $options: 'i' } });
             }
-            console.log(searchConditions);
             songsQuery.or(searchConditions);
         }
-        console.log(songsQuery.toString());
         let songs = await songsQuery.exec();
 
         res.status(200).json({songs}); // Corrected field name to 'songs'

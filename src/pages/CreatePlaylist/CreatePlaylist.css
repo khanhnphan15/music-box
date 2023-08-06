@@ -1,4 +1,4 @@
-.background-image {
+.upload-song {
     position: fixed;
     top: 0;
     left: 0;
@@ -8,23 +8,4 @@
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-
-}
-
-.spinner {
-    top: 50%;
-}
-
-.main-header {
-    width: 100%;
-    border-radius: 0 !important;
-    background-color: white !important;
-}
-
-.main-header h1 {
-    margin-left: 10px !important;
-}
-
-.main-header a {
-    margin-left: 20px;
 }

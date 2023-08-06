@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently 'vite' 'nodemon server.js'",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "runbackend": "nodemon server.js"
   },
   "dependencies": {
     "aws-sdk": "^2.1421.0",

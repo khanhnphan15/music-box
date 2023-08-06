@@ -11,11 +11,6 @@ const playlistSchema = new mongoose.Schema({
         required: true,
         trim: true,
     },
-    artistName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
     songs:  [{type: mongoose.Schema.Types.ObjectId, ref: 'Song'}],
 });
 module.exports = mongoose.model('Playlist', playlistSchema);

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { Grid } from "semantic-ui-react";
 import ProfileBio from "../../components/ProfileBioPage/ProfileBioPage";
-import PageHeader from "../../components/Header/Header";
+import Header from "../../components/Header/Header";
 import userService from "../../utils/userService";
 
 export default function ProfilePage({ user, handleLogout }) {
@@ -11,40 +11,9 @@ export default function ProfilePage({ user, handleLogout }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // grabbing the param from this route
   //  <Route path="/:username" element={<ProfilePage />} />
   const { username } = useParams();
   console.log(username);
-
-
-  // EVERY TIME WE UPDATE STATE here, We will first make http request to the server
-  // to try and perform some CRUD operation.
-  async function addLike(postId) {
-    try {
-      const response = await likesApi.create(postId);
-      // to update state we are just going to refetch the posts, because they will the updated
-      // likes
-      getProfile(); // this funciton updates state
-
-    } catch (err) {
-      setError('error creating like')
-      console.log(err, ' error')
-    }
-  }
-
-  async function removeLike(likeId) {
-    try {
-      const response = await likesApi.removeLike(likeId);
-      // to update state we are just going to refetch the posts, because they will the updated
-      // likes
-      getProfile(); // this funciton updates state
-
-    } catch (err) {
-      setError('error creating like')
-      console.log(err, ' error')
-    }
-  }
-
 
   async function getProfile() {
     // make the api call,
@@ -73,7 +42,7 @@ export default function ProfilePage({ user, handleLogout }) {
   if (loading) {
     return (
       <>
-        <PageHeader handleLogout={handleLogout} user={user} />
+        <Header handleLogout={handleLogout} user={user} />
         <h1>Loading....</h1>
       </>
     );
@@ -83,7 +52,7 @@ export default function ProfilePage({ user, handleLogout }) {
     <Grid>
       <Grid.Row>
         <Grid.Column>
-          <PageHeader handleLogout={handleLogout} user={user} />
+          <Header handleLogout={handleLogout} user={user} />
         </Grid.Column>
       </Grid.Row>
       <Grid.Row>
@@ -93,7 +62,7 @@ export default function ProfilePage({ user, handleLogout }) {
       </Grid.Row>
       <Grid.Row centered>
         <Grid.Column style={{ maxWidth: 750 }}>
-          <PostGallery posts={posts} itemsPerRow={3} isProfile={true} user={user} addLike={addLike} removeLike={removeLike} />
+          <PostGallery posts={posts} itemsPerRow={3} isProfile={true} user={user}  />
         </Grid.Column>
       </Grid.Row>
     </Grid>

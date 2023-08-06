@@ -3,8 +3,14 @@ import { Card, Container, Button, Icon } from "semantic-ui-react";
 import * as songApi from "../../utils/songApi";
 import Header from "../../components/Header/Header";
 import './SongListPage.css';
+import { usePlayerContext } from "../../context/PlayerContext";
+import PlayingSpinner from "../../components/PlayingSpinner/PlayingSpinner";
+import PlayButton from "../../components/PlayButton/PlayButton";
+import {useNavigate} from "react-router-dom";
 
 export default function SongListPage() {
+    const navigate = useNavigate();
+    const { currentSong, setCurrentSong, isPaused } = usePlayerContext();
     const [songs, setSongs] = useState([]);
     const [error, setError] = useState("");
     const [deleteCount, setDeleteCount] = useState(0);
@@ -13,6 +19,7 @@ export default function SongListPage() {
         fetchSongs().then(r => {
         });
     }, [deleteCount]);
+
     async function fetchSongs() {
         try {
             const songsData = await songApi.getAll();
@@ -37,7 +44,13 @@ export default function SongListPage() {
         <div>
             <Header /> {/* Include your Header component */}
             <Container className="song-wrapper">
-                <h1>Song List</h1>
+                <div className="page-header">
+                    <div></div>
+                    <h1>Song List</h1>
+                    <Button type="submit" className="btn" onClick={() => navigate('/upload')}>
+                        Upload
+                    </Button>
+                </div>
                 {/*<Button icon>*/}
                 {/*    <a href="/upload">*/}
                 {/*        <Icon name='upload' />*/}
@@ -57,14 +70,8 @@ export default function SongListPage() {
                                 </div>
                                 {/* Audio controls */}
                                 <div className= "audio-bar">
-                                    {song.url && (
-                                        <audio controls>
-                                            <source src={song.url} type="audio/mpeg" />
-                                            Your browser does not support the audio element.
-                                        </audio>
-                                    )}
+                                    <PlayButton song={song} />
                                 </div>
-
                             </Card.Content>
                         </Card>
                     ))}

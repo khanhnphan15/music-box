@@ -4,16 +4,46 @@ import {Container, Button, Icon, Image, Input, List} from 'semantic-ui-react';
 import {MdSearch} from 'react-icons/md';
 import {getPlaylistDetail} from '../../utils/playlistApi';
 import * as songsApi from '../../utils/songApi';
-
-export default function PlayListDetailPage() {
+import * as playlistApi from '../../utils/playlistApi';
+import './PlaylistDetailPage.css';
+import PlayButton from "../../components/PlayButton/PlayButton"; // Import the CSS file
+export default function PlaylistDetailPage() {
     const {id} = useParams();
     const [playlist, setPlaylist] = useState(null);
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredSongs, setFilteredSongs] = useState([]);
     const [currentSong, setCurrentSong] = useState(null);
     const [timeoutId, setTimeoutId] = useState(null);
-    const [myPlayList, setMyPlaylist] = useState([]);
 
+    const addToPlayList = async (song) => {
+        if (playlist.songs.find(s => s._id === song._id)) {
+            console.error(`"${song.title}" is already added to My Page.`);
+            return;
+        }
+
+        try {
+            playlist.songs.push(song);
+            await playlistApi.update(playlist);
+            setPlaylist(prevPlaylist => ({
+                ...prevPlaylist,
+                songs: [...prevPlaylist.songs]
+            }));
+        } catch (error) {
+            console.error('Error adding song to playlist:', error);
+        }
+
+    };
+    const deleteSong = async (song) => {
+        try {
+            await playlistApi.deleteSong(playlist._id, song._id);
+            setPlaylist(prevPlaylist => ({
+                ...prevPlaylist,
+                songs: prevPlaylist.songs.filter(s => s._id !== song._id)
+            }));
+        } catch (error) {
+            console.error('Error deleting song:', error);
+        }
+    };
     const fetchPlaylistDetail = async () => {
         try {
             const response = await getPlaylistDetail(id);
@@ -34,7 +64,7 @@ export default function PlayListDetailPage() {
     };
 
     useEffect(() => {
-        fetchPlaylistDetail();
+        fetchPlaylistDetail().then(r => {});
     }, []);
 
     const debouncedSearch = debounce(async (searchTerm) => {
@@ -61,7 +91,6 @@ export default function PlayListDetailPage() {
     useEffect(() => {
         debouncedSearch(searchTerm);
     }, [searchTerm]);
-
     const playSong = (song) => {
         if (currentSong === song) {
             setCurrentSong(null);
@@ -70,24 +99,42 @@ export default function PlayListDetailPage() {
         }
     };
 
-    const addToPlayList = (song) => {
-        if (myPlayList.some(existingSong => existingSong._id === song._id)) {
-            console.log(`"${song.title}" is already added to My Page.`);
-            return;
-        }
-        setMyPlaylist([...myPlayList, song]);
-        console.log(`Added "${song.title}" to My Page.`);
-    };
-
     return (
         <div className="detail-background">
             <Container>
                 {playlist && (
                     <div className="playlist-detail-wrapper">
                         <Image className="playlist-image" src={playlist.imageUrl} alt="Playlist Cover"/>
-                        <div>
+                        <div className="playlist-details">
                             <h2>{playlist.name}</h2>
                         </div>
+                    </div>
+                )}
+                {playlist && (
+                    <div>
+                        {playlist.songs.map(song => <List.Item key={song._id}>
+                            <List.Content>
+                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                    <div style={{ marginRight: '1rem' }}>
+                                        <PlayButton song={song} variation='no-outline' />
+                                    </div>
+                                    <div style={{ marginRight: '1rem' }}>
+                                        <Image avatar src={song.imageUrl}/>
+                                    </div>
+                                    <div style={{ flex: 1, textAlign: 'left' }}>
+                                        {song.title}
+                                    </div>
+                                    <div>
+                                        <Button onClick={() => deleteSong(song)}>
+                                            <Icon name='trash'/>
+                                        </Button>
+                                    </div>
+                                </div>
+                            </List.Content>
+                            <List.Content>
+                                {/* Add your additional content here */}
+                            </List.Content>
+                        </List.Item>)}
                     </div>
                 )}
                 <div>
@@ -108,28 +155,31 @@ export default function PlayListDetailPage() {
                     <List divided verticalAlign='middle'>
                         {filteredSongs.map(song => (
                             <List.Item key={song._id}>
-                                <List.Content floated='left'>
-                                    <Button icon onClick={() => playSong(song)}>
-                                        <Icon name={currentSong === song ? 'pause' : 'play'}/>
-                                    </Button>
-                                </List.Content>
-                                <Image floated='left' avatar src={song.imageUrl}/>
-                                <List.Content floated='left' style={{marginLeft: '1rem'}}>
-                                    {song.title}
-                                </List.Content>
-                                <List.Content floated='right'>
-                                    <Button onClick={() => addToPlayList(song)}>
-                                        <Icon name='add'/>
-                                    </Button>
+                                <List.Content>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <div style={{ marginRight: '1rem' }}>
+                                            <PlayButton song={song} variation='no-outline' />
+                                        </div>
+                                        <div style={{ marginRight: '1rem' }}>
+                                            <Image avatar src={song.imageUrl}/>
+                                        </div>
+                                        <div style={{ flex: 1, textAlign: 'left' }}>
+                                            {song.title}
+                                        </div>
+                                        <div>
+                                            <Button onClick={() => addToPlayList(song)}>
+                                                <Icon name='add'/>
+                                            </Button>
+                                        </div>
+                                    </div>
                                 </List.Content>
                                 <List.Content>
-                                    {currentSong === song && (
-                                        <audio controls src={song.url} style={{marginLeft: '1rem'}}/>
-                                    )}
+                                    {/* Add your additional content here */}
                                 </List.Content>
                             </List.Item>
                         ))}
                     </List>
+
                 </div>
             </Container>
         </div>

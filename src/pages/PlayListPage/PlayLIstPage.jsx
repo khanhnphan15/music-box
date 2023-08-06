@@ -3,8 +3,9 @@ import {useParams, useNavigate} from "react-router-dom"; // Import useNavigate
 import Header from "../../components/Header/Header";
 import './PlayListPage.css'; // Import the CSS file
 import * as playlistApi from '../../utils/playlistApi';
+import {Container, Button, Icon, Image, Input, List} from 'semantic-ui-react';
 
-export default function PlayListPage() {
+export default function PlayListPage({user, handleLogout}) {
     const {id} = useParams(); // Get the id parameter
     const navigate = useNavigate(); // Initialize the useNavigate hook
     const [playlists, setPlaylists] = useState([]);
@@ -19,12 +20,12 @@ export default function PlayListPage() {
     useEffect(() => {
         getPlaylists().then(r =>{} );
     }, []);
-    const handleOpenButtonClick = (playlistId) => {
-        navigate(`/playlists/detail/${playlistId}`);
+    const handleOpenButtonClick = (playlist) => {
+        navigate(`/playlists/detail/${playlist._id}`);
     };
     return (
         <div className="playlist-background">
-            <Header/>
+            <Header handleLogout={handleLogout} user={user} />
             <div className="page-inner-wrapper">
                 <div className="html ui top attached segment playlist-wrapper">
                     <div className="ui middle aligned divided list">
@@ -43,7 +44,7 @@ export default function PlayListPage() {
                                             </div>
                                         </div>
                                         <div className="right floated content justify-right">
-                                            <div className="ui button" onClick={() => handleOpenButtonClick(playlist._id)}>Open</div>
+                                            <div className="ui button" onClick={() => handleOpenButtonClick(playlist)}>Open</div>
                                         </div>
                                     </div>
                                 </div>
@@ -52,7 +53,7 @@ export default function PlayListPage() {
                     </div>
                     <div className="ui top attached label table-header">
                         <div className="right floated content">
-                            <div className="ui button">Add Playlist</div>
+                            <button onClick={() => navigate('/playlists/create')} className= "ui inverted secondary basic button">Add Playlist</button>
                         </div>
                     </div>
                 </div>

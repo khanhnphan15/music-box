@@ -42,7 +42,6 @@ export default function LoginPage({ handleSignUpOrLogin }) {
     }
 
   }
-
   function handleChange(e) {
     setState({
       ...state,

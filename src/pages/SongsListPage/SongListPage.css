@@ -1,14 +1,18 @@
 body {
     background-image: url("https://images.unsplash.com/photo-1445375011782-2384686778a0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2370&q=80") !important;
+    background-size: cover !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
 }
-
 .centered-card-group {
     display: grid !important;
     grid-template-columns: 1fr 1fr 1fr 1fr !important;
     gap: 20px;
     padding: 20px 40px !important;
 }
-
+.song-list {
+    flex-direction: column;
+}
 .song-card {
     background: var(--white);
     border-radius: 20px;
@@ -56,4 +60,20 @@ body {
 }
 .audio-bar {
     width: 100%;
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.page-header h1 {
+    margin: 0 !important;
+}
+
+.page-header button {
+    height: 36px;
+    margin-right: 50px !important;
 }

@@ -38,7 +38,6 @@ async function profile(req, res){
     // using the post model to find all the users posts (the user from req.params)
     // finding all posts by a user, and populating the user property!
     const posts = await Post.find({user: user._id}).populate("user").exec();
-    // console.log(posts, ' this posts')
     res.status(200).json({posts: posts, user: user})
   } catch(err){
     console.log(err)

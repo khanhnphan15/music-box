@@ -19,7 +19,6 @@ module.exports = {
 };
 
 function create(req, res) {
-  console.log(req.body, req.file, " < req.body, req.file in posts/api create");
   // check if there is a file, if there isn't send back an error
   if (!req.file) return res.status(400).json({ error: "Please Submit a Photo" });
 
@@ -63,7 +62,6 @@ async function index(req, res) {
     // so you'll have access to the users information
     // when you fetch teh posts
     const posts = await Post.find({}).populate("user").exec();
-    // console.log(posts.map(i => ({id: i.id, userId: i.user?.id})))
     res.status(200).json({ posts });
   } catch (err) {}
 }

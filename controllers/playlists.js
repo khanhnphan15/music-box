@@ -2,6 +2,7 @@ const Playlist = require("../models/playlist");
 
 // helps generate random numbers for
 // our file names, so every file name is unique
+const mongoose = require('mongoose');
 const { v4: uuidv4 } = require("uuid");
 // import the s3 constructor
 const S3 = require("aws-sdk/clients/s3");
@@ -16,7 +17,9 @@ const BUCKET_NAME = process.env.BUCKET_NAME;
 module.exports = {
     create,
     index,
-    getPlaylistDetail
+    getPlaylistDetail,
+    update,
+    _delete,
 };
 async function getPlaylistDetail(req, res) {
     try {
@@ -35,8 +38,41 @@ async function getPlaylistDetail(req, res) {
         res.status(500).json({ error: "Error fetching playlist detail" });
     }
 }
+
+async function update(req, res) {
+    const playlistId = req.params.id;
+    try {
+        // Find the playlist by ID
+        const playlist = await Playlist.findById(playlistId).populate('songs').exec();
+
+        if (!playlist) {
+            return res.status(404).json({ error: 'Playlist not found' });
+        }
+
+        // Update playlist fields with data from req.body
+        playlist.name = req.body.name;
+        playlist.imageUrl = req.body.imageUrl;
+        playlist.artist = req.body.artist;
+
+        // Update or add individual songs within the songs array
+        req.body.songs.forEach(songToUpdate => {
+            const existingSong = playlist.songs.find(song => song._id.equals(mongoose.Types.ObjectId(songToUpdate._id)));
+            if (!existingSong) {
+                playlist.songs.push(songToUpdate);
+            }
+        });
+
+        // Save changes to the database
+        await playlist.save();
+
+        return res.status(200).json({ message: 'Playlist updated successfully' });
+    } catch (error) {
+        console.error('Error updating playlist:', error);
+        res.status(500).json({ error: 'An error occurred while updating the playlist' });
+    }
+}
+
 function create(req, res) {
-    console.log(req.body, req.file, " < req.body, req.file in posts/api create");
     // check if there is a file, if there isn't send back an error
     if (!req.file) return res.status(400).json({ error: "Please Submit a Photo" });
 
@@ -46,32 +82,35 @@ function create(req, res) {
     // create the object we want to send to aws
     const params = { Bucket: BUCKET_NAME, Key: filePath, Body: req.file.buffer };
 
-    s3.upload(params, async function (err, data) {
-        if (err) {
-            console.log("===========================================");
-            console.log(
-                err,
-                " err from aws, either your bucket name is wrong or your keys arent correct"
-            );
-            console.log("===========================================");
-            res.status(400).json({ error: "Error from aws, check your terminal!" });
-        }
+    try {
+        s3.upload(params, async function (err, data) {
+            if (err) {
+                console.log("===========================================");
+                console.log(
+                    err,
+                    " err from aws, either your bucket name is wrong or your keys arent correct"
+                );
+                console.log("===========================================");
+                res.status(400).json({ error: "Error from aws, check your terminal!" });
+            }
 
-        try {
-            // Use our Model to create a document in the posts collection in Mongodb
-            const post = await Post.create({
-                caption: req.body.caption,
-                user: req.user, // req.user is defined in config/auth if we the client sends over the jwt token
-                photoUrl: data.Location, // data.Location comes from the callback in the s3 upload
-            });
+            try {
+                // Use our Model to create a document in the posts collection in Mongodb
+                const post = await Playlist.create({
+                    name: req.body.name,
+                    imageUrl: data.Location, // data.Location comes from the callback in the s3 upload
+                });
 
-            await post.populate("user"); // populating on a mongoose document! this gives us the user object
-            // this response will show up in the feedPage in   const responseData = await postsApi.create(post);
-            res.status(201).json({ data: post }); // <- this is what responseData should be
-        } catch (err) {
-            res.status(400).json({ error: err });
-        }
-    });
+                await post.populate("user"); // populating on a mongoose document! this gives us the user object
+                // this response will show up in the feedPage in   const responseData = await postsApi.create(post);
+                res.status(201).json({ data: post }); // <- this is what responseData should be
+            } catch (err) {
+                res.status(400).json({ error: err });
+            }
+        });
+    } catch (err) {
+        debugger
+    }
 }
 
 async function index(req, res) {
@@ -81,5 +120,30 @@ async function index(req, res) {
     } catch (err) {
         console.error("Error fetching songs:", err);
         res.status(500).json({ error: "Error fetching songs" });
+    }
+}
+
+async function _delete(req, res) {
+    const playlistId = req.params.playlistId;
+    const songId = req.params.songId;
+
+    try {
+        // Find the playlist by ID
+        const playlist = await Playlist.findById(playlistId);
+
+        if (!playlist) {
+            return res.status(404).json({ error: 'Playlist not found' });
+        }
+
+        // Remove the song from the playlist
+        playlist.songs = playlist.songs.filter(song => song._id.toString() !== songId);
+
+        // Save changes to the database
+        await playlist.save();
+
+        return res.status(200).json({ message: 'Song deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting song:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the song' });
     }
 }
