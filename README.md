@@ -18,9 +18,7 @@ Audio streaming with player controls (play, pause).
 #### Screenshot
 
 Signup Page
-
 ![img_5.png](img_5.png)
-
 
 Login Page
 ![img_6.png](img_6.png)
@@ -28,7 +26,7 @@ Login Page
 Playlist Page (Homepage)
 ![img.png](img.png)
 
-Add Playlist Detail Page
+Playlist Detail Page
 ![img_1.png](img_1.png)
 
 Add Playlist Form
