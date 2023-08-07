@@ -9,7 +9,7 @@ MERN (MongoDB, Express, React, Node.js, React Semantic UI)
 
 
 #### Features
-User authentication and authorization using JWT tokens.
+User authentication and authorization using token-based authentication.
 User home page to manage uploaded audio files and playlists.
 Audio file upload with support for mp3 file formats.
 Playlist creation and management.
