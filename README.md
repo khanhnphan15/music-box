@@ -4,7 +4,8 @@
 Music sharing and Streaming web application.
 This full-stack web app allows users to share and stream their favorite audio files. Users can create playlists, upload audio files, and explore other users' collections.
 
-##### Technologies: MERN (MongoDB, Express, React, Node.js, React Semantic UI)
+#### Technologies: 
+MERN (MongoDB, Express, React, Node.js, React Semantic UI)
 
 
 #### Features
@@ -15,7 +16,9 @@ Playlist creation and management.
 Audio streaming with player controls (play, pause).
 
 #### Screenshot
+
 Signup Page
+
 ![img_5.png](img_5.png)
 
 Login Page
