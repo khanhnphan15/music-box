@@ -1,7 +1,7 @@
 import React from "react";
 import './PlayingSpinner.css'; // Import the CSS file
 
-export default function PlayingSpinner({handleAddPost}) {
+export default function PlayingSpinner({}) {
     return (
         <svg className='music-svg' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 512">
             {/* Add 'music-bars' class to the SVG elements to apply the animation */}
