@@ -1,6 +1,6 @@
 import React from "react";
 import "./LoginPage.css";
-
+import ErrorMessage from '../../components/ErrorMessage/ErrorMessage';
 import { useState } from 'react'
 
 import { Link, useNavigate } from 'react-router-dom'
