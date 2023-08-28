@@ -58,7 +58,11 @@ Planned future enhancements:
 * Need to setup functionality to add an image when create a new song, upload all the image to s3 AWS
 
 
-
+Deploy:
+npm run vite-build
+git add .
+git commit -m "prepped for deployment"
+git push origin main 
 
 
 
