@@ -7,6 +7,7 @@ const favicon = require("serve-favicon");
 const multer = require("multer");
 
 const app = express();
+app.set('view engine', 'ejs');
 
 // Multer configuration
 const storage = multer.diskStorage({
@@ -54,12 +55,17 @@ app.use('/api/posts', postRouter);
 app.use("/api/songs", songRouter);
 app.use("/api/playlists", playlistRouter);
 // "catch all" route
+
+const manifest = require('./dist/manifest.json');
+
+app.use(express.static(path.join(__dirname, "dist")));
+
 // "catch all" route
-app.get("/*", function (req, res) {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
+app.get('/*', function(req, res) {
+  res.render(path.join(__dirname, 'dist', 'index.ejs'), {manifest});
 });
 
-const port = process.env.PORT || 3001;
+// const port = process.env.PORT || 3001;
 
 
 

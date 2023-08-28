@@ -23,7 +23,7 @@ function create(req, res) {
     const caption = req.body.caption;
     const file = req.file; // The uploaded file, if present
     const title = req.body.title;
-    const artist = req.body.artist;
+    const artist = req.body.artistName;
     const album = req.body.album;
     const description = req.body.description;
     // check if there is a file, if there isn't send back an error
